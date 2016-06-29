@@ -49,7 +49,7 @@ function DialogController($scope, $http, $mdDialog) {
 			'name' : $scope.product_name,
 			'status' : $scope.product_status
 		}).success(function(data, status, headers, config) {
-	      		alert(data.strim());
+	      		alert(data.trim());
    			$scope.product_id = undefined;
    			$scope.product_code = undefined;
    			$scope.product_name = undefined;
