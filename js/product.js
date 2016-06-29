@@ -23,7 +23,6 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function($scope
 	}
 
 	$scope.getAll = function() {
-		console.log('Oops');
 		$http.get('db_controller/product/read_product.php'
 		).success( function (response) {
 				$scope.items = response.records;
@@ -49,7 +48,6 @@ function DialogController($scope, $http, $mdDialog) {
 			'name' : $scope.product_name,
 			'status' : $scope.product_status
 		}).success(function(data, status, headers, config) {
-	      		alert(data.trim());
    			$scope.product_id = undefined;
    			$scope.product_code = undefined;
    			$scope.product_name = undefined;
@@ -65,7 +63,7 @@ function DialogController($scope, $http, $mdDialog) {
 				$scope.items = response.records;
 			});
 	}
-	
+
 }
 
 //function SearchProductList(searchWords) {
