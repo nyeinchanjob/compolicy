@@ -1,0 +1,27 @@
+<md-content flex layout="row" class="body-color">
+  <div flex style="margin:10px;" layout="column">
+    <div flex>
+      <label class="md-title" layout-padding style="color:red;">Deals List</label>
+    </div>
+    <div style="height:1%;">&nbsp;</div>
+    <md-checkbox aria-label="select_all" ng-model="cbValue.cbselect_all">
+      Select All
+    </md-checkbox>
+    <md-content flex class="rounded-block" layout="column">
+      <div>
+        <md-card layout="row" layout-align="start center">
+          <md-checkbox aria-label="select_edit" layout-align="center center" ng-model="cbValue.cbselect_edit"></md-checkbox>
+          <md-button layout-fill layout-align="center center" ><span flex>MAX2O 1L WATER 12_1 MAX2O</span></md-button>
+        </md-card>
+      </div>
+      <!-- <span flex style="background-color:red;">&nbsp;</span> -->
+    </md-content>
+    <md-content layout="row" class="body-color">
+      <span flex>&nbsp;</span>
+      <md-button class="md-fab" aria-label="new">
+          <md-icon md-svg-src="img/icons/bottle_white_24px.svg"></md-icon>
+      </md-button>
+    </md-content>
+
+  </div>
+</md-content>

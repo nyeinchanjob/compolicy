@@ -1,0 +1,23 @@
+{
+  "name": "compolicy",
+  "version": "0.0.1",
+  "description": "Create Promotion deals Qty with Commercial Policy",
+  "moduleType": [
+    "globals"
+  ],
+  "authors": [
+    "Nyein Chan"
+  ],
+  "license": "MIT",
+  "homepage": "index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material-data-table": "~0.9.8"
+  }
+}

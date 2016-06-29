@@ -1,0 +1,31 @@
+<md-content flex layout-fill ng-controller="ProductCtrl" layout="column" ng-cloak="" class="body-color">
+  <div flex style="margin:10px;" layout="column" ng-init="getAll();">
+    <div flex>
+      <label class="md-title" layout-padding style="color:red;">Product List</label>
+    </div>
+    <div style="height:1%;">&nbsp;</div>
+    <div class="" flex layout="row">
+      <md-checkbox style="margin:15px;" aria-label="select_all" ng-model="cbValue.cbselect_all">
+        Select All
+      </md-checkbox>
+      <span flex>&nbsp;</span>
+      <md-button class="md-raised md-warn" ng-click="showProductDetail();">Add New</md-button>
+      <md-button class="md-raised" ng-show="cbValue.cbselect_edit">Delete</md-button>
+    </div>
+    <md-content flex class="body-color rounded-block" layout="column">
+      <div ng-repeat="item in items">
+        <md-card layout="row" layout-align="start center">
+          <md-checkbox class="margin-fifteen" aria-label="select_edit" ng-model="cbValue.cbselect_edit"></md-checkbox>
+          <md-button layout-fill layout-align="center center" ng-value="item.product_id" ><span flex>{{item.product_name}}</span></md-button>
+          <md-button ng-value="item.product_status" >{{item.product_status}}</md-button>
+        </md-card>
+      </div>
+    </md-content>
+  </div>
+  <!-- <md-content layout="row">
+    <span flex>&nbsp;</span>
+    <md-button class="md-fab" aria-label="new">
+        <md-icon md-svg-src="img/icons/bottle_white_24px.svg"></md-icon>
+    </md-button>
+  </md-content> -->
+</md-content>
