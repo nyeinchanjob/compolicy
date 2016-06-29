@@ -1,4 +1,5 @@
 //angular.module('MyProduct', ['ngMaterial', 'ngMessages'])
+//git commit
 var MyApp = angular.module('MyApp');
 MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function($scope, $mdDialog, $http) {
 	$scope.cbValue = {};
