@@ -23,7 +23,7 @@ header("Content-Type: application/json; charset=UTF-8");
 		$x = 1;
 		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			extract($row);
-            
+
 			$data .= '{';
 			$data .= '"id":"'   . $id . '",';
 			$data .= '"code":"' . $code . '",';
@@ -35,7 +35,7 @@ header("Content-Type: application/json; charset=UTF-8");
 			$x++;
 		}
 	}
-	
+
 	echo '{"records":[' . $data . ']}';
 
 ?>
