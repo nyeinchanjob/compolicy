@@ -21,7 +21,6 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function($scope
 		$scope.product_code = undefined;
 		$scope.product_name = undefined;
 		$scope.product_status = true;
-		$scope.product_status = true;
 	}
 
 	$scope.getAll = function() {
