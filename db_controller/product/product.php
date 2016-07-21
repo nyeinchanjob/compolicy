@@ -10,7 +10,7 @@ class Product {
 
 	public function __construct($db) {
 		$this->conn = $db;
-	;}
+	}
 
 	function create() {
 		$query = 'INSERT INTO
@@ -41,7 +41,7 @@ class Product {
 	}
 
 	function readAll() {
-		$query = ' SELECT
+		$query = 'SELECT
 				id, product_code, product_name, product_status
 			FROM
 			' . $this->table_name . '
@@ -49,103 +49,8 @@ class Product {
 				id DESC';
 		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
-		print_r($stmt)
 		return $stmt;
 	}
 
 }
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>

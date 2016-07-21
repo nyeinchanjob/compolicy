@@ -9,15 +9,14 @@
         Select All
       </md-checkbox>
       <span flex>&nbsp;</span>
-      <md-button class="md-raised md-warn" ng-click="showProductDetail();">Add New</md-button>
+      <md-button class="md-raised md-warn" ng-click="showProductDetail();">Add</md-button>
       <md-button class="md-raised" ng-show="cbValue.cbselect_edit">Delete</md-button>
     </div>
     <md-content flex class="body-color rounded-block" layout="column">
       <div ng-repeat="item in items">
         <md-card layout="row" layout-align="start center">
-          <md-checkbox class="margin-fifteen" aria-label="select_edit" ng-model="cbValue.cbselect_edit"></md-checkbox>
+          <md-checkbox class="margin-fifteen" aria-label="select_edit" ng-model="item.product_id"></md-checkbox>
           <md-button layout-fill layout-align="center center" ng-value="item.product_id" ><span flex>{{item.product_name}}</span></md-button>
-          <md-button ng-value="item.product_status" >{{item.product_status}}</md-button>
         </md-card>
       </div>
     </md-content>

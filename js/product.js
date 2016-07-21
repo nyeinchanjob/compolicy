@@ -49,6 +49,7 @@ function DialogController($scope, $http, $mdDialog) {
 			'name' : $scope.product_name,
 			'status' : $scope.product_status
 		}).success(function(data, status, headers, config) {
+			console.log(data);
    			$scope.product_id = undefined;
    			$scope.product_code = undefined;
    			$scope.product_name = undefined;
@@ -58,9 +59,7 @@ function DialogController($scope, $http, $mdDialog) {
 	}
 
 	$scope.getAll = function() {
-		console.log('Oops');
-		$http.get('db_controller/product/read_product.php'
-		).success( function (response) {
+		$http.get('db_controller/product/read_product.php').success( function (response) {
 				$scope.items = response.records;
 			});
 	}
