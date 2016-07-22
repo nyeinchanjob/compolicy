@@ -1,7 +1,7 @@
 <?php
 class Database {
-	private $host = 'localhost';
-	private $db_name = 'compolicy';
+	private $host = '10.72.35.178';
+	private $db_name = 'crud';
 	private $user_name = 'super';
 	private $password = 'suPer@123';
 
