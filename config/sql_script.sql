@@ -1,3 +1,4 @@
+use compolicy;
 select 
 	lg.username, lg.password, lg.user_id, lg.login_status, 
     ur.first_name, ur.last_name, ur.position, rl.role_name 
@@ -26,6 +27,28 @@ insert into menu(role_id, menu_code, menu_description, menu_status) values
 (1, 'survey', 'Survey', 1),
 (1, 'config', 'Configuration', 1);
 
+create table if not exists product_brand(
+	id integer not null primary key auto_increment,
+    product_id integer,
+    config_id integer
+);
+
+create table if not exists product_size(
+	id integer not null primary key auto_increment,
+    product_id integer,
+    size_id integer
+);
+
+create table if not exists product_type(
+	id integer not null primary key auto_increment,
+    product_id integer,
+    type_id integer
+);
+
+alter table product_brand 
+change column config_id brand_id integer;
+
+
 insert into control(role_id, control_code, control_description, control_status) values
 (1, 'c', 'Create', 1),
 (1, 'r', 'Read', 1),
@@ -45,10 +68,18 @@ insert into config(config_code, config_value, config_type, config_status) values
 ('minutemaid', 'Nutriboost', 'brand', 1);
 
 
-insert into config(config_code, config_value, config_value, config_type, config_status) values
+insert into config(config_code, config_value, config_type, config_status) values
 ('1l', '1 Litre', 'size', 1),
 ('1.5l', '1.5 Litre', 'size', 1),
 ('550ml', '550 ML', 'size', 1),
 ('425ml', '425 ML', 'size', 1),
 ('330ml', '330 ML', 'size', 1),
 ('285ml', '285 ML', 'size', 1);
+
+insert into config(config_code, config_value, config_type, config_status) values
+('PET', 'PET', 'type',1),
+('RGB', 'RGB', 'type', 1),
+('CAN', 'CAN', 'type',1);
+
+select * from config;
+

@@ -8,6 +8,12 @@ class Product {
 	public $name;
 	public $status;
 
+	public $cid;
+	public $config_code;
+	public $config_value;
+	public $config_type;
+	public $config_status;
+
 	public function __construct($db) {
 		$this->conn = $db;
 	}
@@ -40,6 +46,28 @@ class Product {
 		}
 	}
 
+	function readConfig() {
+		$query = 'SELECT
+				`id`, `config_code`, `config_value`, `config_type`, `config_status`
+			FROM
+				`config`
+			WHERE
+				`config_type` = :configType AND
+				`config_status` = 1
+			ORDER BY
+				`config_value`';
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':configType', $this->config_type);
+		$stmt->execute();
+
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		$this->cid = $row['id'];
+		$this->config_code = $row['config_code'];
+		$this->config_value = $row['config_value'];
+		$this->config_type = $row['config_type'];
+		$this->config_status = $row['config_status'];
+	}
+
 	function readAll() {
 		$query = 'SELECT
 				id, product_code, product_name, product_status
@@ -65,7 +93,7 @@ class Product {
 		$stmt->bindParam(1, $this->id);
 		$stmt->execute();
 
-		$row = $stmt->fetch(PDO::FETCH_ASSOC	);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		$this->id = $row['id'];
 		$this->code = $row['product_code'];
