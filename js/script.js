@@ -1,9 +1,16 @@
 var i = 0;
 var MyApp = angular.module('MyApp', ['ngMaterial', 'ngMessages']);
-MyApp.controller('AppCtrl', function($scope) {
+
+MyApp.run(function ($rootScope) {
+    $rootScope.$on('scope.stored', function (event, data) {
+        console.log("scope.stored", data);
+    });
+});
+MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav) {
     // $scope.deals = [
     //   { product_id:i, product_buy:0, product_get:0, product_disc:0}
     //   ];
+    Scopes.store('scriptScopes', $scope);
     $scope.deals = [
       { product_id:1, product_buy:120, product_get:1, product_disc:50},
       { product_id:2, product_buy:250, product_get:3, product_disc:1200},
@@ -12,8 +19,27 @@ MyApp.controller('AppCtrl', function($scope) {
     $scope.checked_index = [];
     $scope.checked_show = false;
     $scope.bundle_deals = [];
-    $scope.loginCorrect = false;
+    $rootScope.loginCorrect = false;
     $scope.show_layout='product_list';
+
+    $scope.toggleLeft = buildToggler('left');
+
+    $scope.logout = function () {
+      $rootScope.loginCorrect = false;
+      $mdSidenav('left').close()
+    };
+
+    function buildToggler(navID) {
+      return function() {
+        // Component lookup should always be available since we are not using `ng-if`
+        $mdSidenav(navID).toggle();
+      }
+    }
+
+    $scope.isOpenLeft = function(){
+      return !$rootScope.loginCorrect;//$mdSidenav('left').isOpen();
+    };
+
     $scope.add = function () {
       $scope.deals.push({product_id: i+1,product_buy:0, product_get:0, product_disc:0})
       i += 1;
@@ -74,6 +100,20 @@ MyApp.controller('AppCtrl', function($scope) {
         $scope.product_name = String($scope.product_name).trim().length > 0 ? String($scope.product_name).trim().toUpperCase() : "";
         saveAs(blob, "Commercial_Policy_"+ $scope.product_name +".xls");
     };
+  });
+
+  MyApp.factory('Scopes', function ($rootScope) {
+      var mem = {};
+
+      return {
+          store: function (key, value) {
+              $rootScope.$emit('scope.stored', key);
+              mem[key] = value;
+          },
+          get: function (key) {
+              return mem[key];
+          }
+      };
   });
 
 function check_deals_zero (deals) {

@@ -74,14 +74,17 @@ class Login {
 	function checkLogin() {
 		$query = 'SELECT
 			lg.id, lg.username, lg.password, lg.user_id, lg.login_status,
-			ur.first_name,ur.last_name, ur.role_id
-		 	rl.role_name
-			FROM
-			' . $this->table_name . ' as lg inner join user as ur on lg.user_id = ur.user_id
-			inner join role as rl on ur.role_id = rl.role_id
-			WHERE lg.username = :username and lg.password = :password and lg.login_status = 1
+			ur.first_name, ur.last_name, ur.position, ur.role_id,
+			rl.role_name FROM
+			' . $this->table_name . ' as lg
+			INNER JOIN user AS ur ON lg.user_id = ur.id
+			INNER JOIN role AS rl ON ur.role_id = rl.id
+			WHERE
+				lg.username = :username AND
+				lg.password = :password AND
+				lg.login_status = 1
 			LIMIT
-				0, 1';
+				0,1;';
 
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':username', $this->username);
@@ -97,7 +100,7 @@ class Login {
 		$this->fname = $row['first_name'];
 		$this->lname = $row['last_name'];
 		$this->role_id = $row['role_id'];
-		$this->rname = $row['rname'];
+		$this->rname = $row['role_name'];
 		$this->status = $row['login_status'];
 	}
 
