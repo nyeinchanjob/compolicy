@@ -12,6 +12,7 @@ MyApp.controller('AppCtrl', function($scope) {
     $scope.checked_index = [];
     $scope.checked_show = false;
     $scope.bundle_deals = [];
+    $scope.loginCorrect = false;
     $scope.show_layout='product_list';
     $scope.add = function () {
       $scope.deals.push({product_id: i+1,product_buy:0, product_get:0, product_disc:0})

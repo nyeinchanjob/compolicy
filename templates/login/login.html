@@ -1,0 +1,33 @@
+<!-- <script src="js/login.js"></script> -->
+<md-content class="md-padding body-color" layout-xs="column" layout="row" layout-align="center start" ng-controller="LoginCtrl" ng-cloak>
+  <form name="loginDetail"  layout-align="center start">
+  <div flex-xs layout-fill layout="column" class="body-color">
+    <md-card md-theme-watch flex-xs>
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-title">Login</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="row" layout-align="space-between">
+        <div class="md-dialog-content" layout="column" flex>
+        <md-input-container class="md-block md-subheader" flex>
+          <label>Username</label>
+          <input required ng-model="username" name="username">
+          <div ng-messages="loginDetail.username.$error">
+          <div ng-message="required">This is required.</div></div>
+        </md-input-container>
+        <md-input-container class="md-block md-subheader" flex>
+          <label>Password</label>
+          <input required ng-model="password" name="password" type="password">
+          <div ng-messages="loginDetail.password.$error">
+          <div ng-message="required">This is required.</div></div>
+        </md-input-container>
+      </div>
+      </md-card-content>
+      <md-card-actions layout="row" layout-align="end center">
+        <md-button class="md-warn" ng-click="login()">Login</md-button>
+      </md-card-actions>
+    </md-card>
+  </div>
+</form>
+</md-content>

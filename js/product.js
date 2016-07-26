@@ -11,7 +11,7 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function($scope
 				product_name : undefined,
 				product_status : true
 			}
-			$scope.cbselected = []
+			$scope.cbselected = [];
 
     	$scope.showProductDetail = function() {
       		$mdDialog.show({
@@ -107,7 +107,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	});
 	}
 
-	$scope.buttonAction = action == 'new' ? 'new' : 'update';
+	$scope.buttonAction = action == 'new' ? 'save' : 'update';
 
 	$scope.cancel = function() {
 		$scope.productInfo = {
