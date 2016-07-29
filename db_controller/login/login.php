@@ -12,6 +12,7 @@ class Login {
 	public $fname;
 	public $lname;
 	public $role_id;
+	public $position;
 	public $rname;
 
 	public function __construct($db) {
@@ -67,7 +68,7 @@ class Login {
 		$this->id = $row['id'];
 		$this->code = $row['username'];
 		$this->name = $row['password'];
-		$this->name = $row['user_id'];
+		$this->user_id = $row['user_id'];
 		$this->status = $row['login_status'];
 	}
 
@@ -89,19 +90,14 @@ class Login {
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':username', $this->username);
 		$stmt->bindParam(':password', $this->password);
-		$stmt->execute();
-
-		$row = $stmt->fetch(PDO::FETCH_ASSOC	);
-
-		$this->id = $row['id'];
-		$this->username = $row['username'];
-		$this->password = $row['password'];
-		$this->user_id = $row['user_id'];
-		$this->fname = $row['first_name'];
-		$this->lname = $row['last_name'];
-		$this->role_id = $row['role_id'];
-		$this->rname = $row['role_name'];
-		$this->status = $row['login_status'];
+		if ($stmt->execute()) {
+			return $stmt;
+		} else {
+			echo '<pre>';
+				echo($stmt->errorInfo());
+			echo '</pre>';
+			return;
+		}
 	}
 
 	function update() {

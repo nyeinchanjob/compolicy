@@ -17,19 +17,24 @@
 
 	$login->username = $data->username;
 	$login->password = $data->password;
-  $login->checkLogin();
+  $stmt = $login->checkLogin();
+	$num = $stmt->rowCount();
+	$login_arr = array();
+	if($num>0) {
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				extract($row);
+				$login_arr['id'] = $id;
+				$login_arr['username'] = $username;
+				$login_arr['password'] = $password;
+				$login_arr['user_id'] = $user_id;
+				$login_arr['firstname'] = $first_name;
+				$login_arr['lastname'] = $last_name;
+				$login_arr['role_id'] = $role_id;
+				$login_arr['rolename'] = $role_name;
+				$login_arr['position'] = $position;
+				$login_arr['status'] = $login_status;
 
-  $login_arr[] = array(
-    'id' => $login->id,
-    'username' => $login->username,
-    'password' => $login->password,
-    'user_id' => $login->user_id,
-    'firstname' => $login->fname,
-    'lastname' => $login->lname,
-    'role_id' => $login->role_id,
-    'rolename' => $login->rname,
-    'status' => $login->status
-  );
-
+		}
+	}
   print_r(json_encode($login_arr));
 ?>

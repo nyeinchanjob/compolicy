@@ -13,6 +13,10 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 		product_status: true
 	}
 
+	$scope.selectedbrand = '';
+	$scope.checkSelection = [];
+	$scope.radioSelection = '';
+
 	$scope.typechecked = false;
 	$scope.cbselected = [];
 
@@ -101,11 +105,10 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 			false;
 	}
 
-
-
 }]);
 
 function DialogController($scope, $http, $mdDialog, id, action) {
+
 	if (id != undefined) {
 		$http.post('db_controller/product/read_one_product.php', {
 			'id': id
@@ -126,10 +129,10 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 		$http.post('db_controller/product/read_product_config.php', {
 			'cType': $scope.cfgType
 		}).success(function(response) {
-			console.log(response.records);
-			$scope.brands = response.records[0];
-			$scope.sizes = response.records[1];
-			$scope.types = response.records[2];
+			console.log(response.records[1].sizes);
+			$scope.brands = response.records[0].brands;
+			$scope.sizes = response.records[1].sizes;
+			$scope.types = response.records[2].types;
 		})
 	};
 

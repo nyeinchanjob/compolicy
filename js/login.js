@@ -4,7 +4,7 @@ MyApp.run(function ($rootScope) {
         console.log("scope.stored", data);
     });
 });
-MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes', function($scope, $http, $rootScope, Scopes){
+MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes', '$mdToast', function($scope, $http, $rootScope, Scopes, $mdToast){
   Scopes.store('loginScopes', $scope);
   $rootScope.loginCorrect = false;
   $scope.login = function() {
@@ -12,18 +12,35 @@ MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes', functi
       'username' : $scope.username,
       'password' : $scope.password
     }).success(function(data, status, headers, config) {
-      $rootScope.loginCorrect = true;
+      if(Object.keys(data).length>0) {
+        $scope.userInfo = {
+          user_id : data['user_id'],
+          first_name : data['firstname'],
+          last_name : data['lastname'],
+          role_id : data['role_id'],
+          rolename : data['rolename']
+        };
+        $rootScope.loginCorrect = true;
+      } else {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('Username and Password are incorrect. Please try again.')
+            .position('top right' )
+            .hideDelay(2000)
+          );
+        $rootScope.loginCorrect = false;
+      }
       $scope.username = '';
       $scope.password = '';
-      $scope.userInfo = {
-        user_id : data[0]['user_id'],
-        first_name : data[0]['firstname'],
-        last_name : data[0]['lastname'],
-        role_id : data[0]['role_id'],
-        rolename : data[0]['rolename']
-      };
+
     }).error(function(data, status, headers, config) {
-      alert('Login found error. System can\'t login with this account. Please try again.');
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('Username and Password are incorrect. Please try again.')
+          .position('top right' )
+          .hideDelay(2000)
+        );
+      $rootScope.loginCorrect = false;
     });
   };
 

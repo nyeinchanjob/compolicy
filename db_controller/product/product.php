@@ -2,6 +2,7 @@
 class Product {
 	private $conn;
 	private $table_name = 'product';
+	private $table_config = '`config`';
 
 	public $id;
 	public $code;
@@ -22,9 +23,9 @@ class Product {
 		$query = 'INSERT INTO
 			'. $this->table_name . '
 			SET
-				product_code =:code,
-				product_name =:name,
-				product_status =:status';
+				`product_code` =:code,
+				`product_name` =:name,
+				`product_status` =:status';
 
 		$stmt = $this->conn->prepare($query);
 		// posted values
@@ -48,24 +49,24 @@ class Product {
 
 	function readConfig() {
 		$query = 'SELECT
-				`id`, `config_code`, `config_value`, `config_type`, `config_status`
+						`id`, `config_code`, `config_value`, `config_type`, `config_status`
 			FROM
-				`config`
+			 ' . $this->table_config . '
 			WHERE
 				`config_type` = :configType AND
 				`config_status` = 1
 			ORDER BY
-				`config_value`';
+				`config_value`;';
 		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':configType', $this->config_type);
-		$stmt->execute();
-
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		$this->cid = $row['id'];
-		$this->config_code = $row['config_code'];
-		$this->config_value = $row['config_value'];
-		$this->config_type = $row['config_type'];
-		$this->config_status = $row['config_status'];
+		$stmt->bindParam(":configType", $this->config_type);
+		if($stmt->execute()) {
+			return $stmt;
+		} else {
+			echo '<pre>';
+				print_r($stmt->errorInfo());
+			echo '</pre>';
+			return;
+		}
 	}
 
 	function readAll() {
@@ -104,7 +105,7 @@ class Product {
 	function update() {
 		$query = 'UPDATE
 		' . $this->table_name . ' SET
-				product_code = :code,
+				`product_code` = :code,
 				product_name = :name,
 				product_status = :status
 			WHERE
