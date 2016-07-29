@@ -1,6 +1,6 @@
 <?php
-class Brand {
+class ProductType {
     private $conn;
-    private $table_name = 'product_brand';
+    private $table_name = 'product_Type';
 }
 ?>

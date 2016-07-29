@@ -1,4 +1,3 @@
-use compolicy;
 select 
 	lg.username, lg.password, lg.user_id, lg.login_status, 
     ur.first_name, ur.last_name, ur.position, rl.role_name 
@@ -27,28 +26,6 @@ insert into menu(role_id, menu_code, menu_description, menu_status) values
 (1, 'survey', 'Survey', 1),
 (1, 'config', 'Configuration', 1);
 
-create table if not exists product_brand(
-	id integer not null primary key auto_increment,
-    product_id integer,
-    config_id integer
-);
-
-create table if not exists product_size(
-	id integer not null primary key auto_increment,
-    product_id integer,
-    size_id integer
-);
-
-create table if not exists product_type(
-	id integer not null primary key auto_increment,
-    product_id integer,
-    type_id integer
-);
-
-alter table product_brand 
-change column config_id brand_id integer;
-
-
 insert into control(role_id, control_code, control_description, control_status) values
 (1, 'c', 'Create', 1),
 (1, 'r', 'Read', 1),
@@ -60,12 +37,17 @@ add column brand varchar(100),
 add column size text,
 add column type varchar(100);
 
+describe product;
+alter table product drop column `type`;
+alter table product
+add column `type` text;
+
 describe config;
 insert into config(config_code, config_value, config_type, config_status) values
-('cocacola', 'Coca-Cola', 'brand', 1),
-('max', 'Max', 'brand', 1),
-('burn', 'Burn', 'brand', 1),
-('minutemaid', 'Nutriboost', 'brand', 1);
+('CLA', 'Coca-Cola', 'brand', 1),
+('MAX', 'Max', 'brand', 1),
+('BRN', 'Burn', 'brand', 1),
+('MMD', 'Nutriboost', 'brand', 1);
 
 
 insert into config(config_code, config_value, config_type, config_status) values
@@ -77,9 +59,43 @@ insert into config(config_code, config_value, config_type, config_status) values
 ('285ml', '285 ML', 'size', 1);
 
 insert into config(config_code, config_value, config_type, config_status) values
-('PET', 'PET', 'type',1),
-('RGB', 'RGB', 'type', 1),
-('CAN', 'CAN', 'type',1);
+('PET', 'Plastic', 'type', 1),
+('CAN', 'Can', 'type', 1),
+('RGB', 'Returnable Glass Bottle', 'type',1);
 
 select * from config;
 
+SELECT
+						`id`, `config_code`, `config_value`, `config_type`, `config_status`
+			FROM
+			 `config`
+			WHERE
+				`config_type` = 'brand' AND
+				`config_status` = 1
+			ORDER BY
+				`config_value`;
+                
+truncate table product;
+
+SELECT 
+	lg.id, lg.username, lg.`password`, lg.user_id, lg.login_status, 
+    ur.first_name, ur.last_name, ur.`position`, ur.role_id, 
+    rl.role_name 
+FROM 
+	login as lg 
+INNER JOIN 
+	`user` AS ur 
+ON 
+	lg.user_id = ur.id 
+INNER JOIN 
+	role AS rl 
+ON 
+	ur.role_id = rl.id 
+WHERE 
+	lg.username = 'asd' AND 
+    lg.password = 'asd' AND 
+    lg.login_status = 1 
+LIMIT 
+	0,1;
+    
+    

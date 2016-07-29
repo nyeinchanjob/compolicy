@@ -17,6 +17,13 @@
 
 	$product->code = $data->code;
 	$product->name	= $data->name;
+	$product->barndId	= $data->brandId;
+	$product->sizeId	= $data->sizeId;
+	$product->typeId	= $data->typeId;
+	$product->otherSizeStatus	= $data->sizeOtherStatus;
+	$product->otherSizeDetail	= $data->sizeOtherDetail;
+	$product->otherTypeStatus	= $data->typeOtherStatus;
+	$product->otherTypeDetail	= $data->typeOtherDetail;
 	$product->status = $data->status;
 
 	if ($product->create()) {
