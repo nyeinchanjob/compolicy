@@ -32,7 +32,7 @@
             <md-radio-button  ng-repeat="size in sizes" name="size.config_code"  ng-value="size.config_id" aria-label="{{size.config_value}}" ng-click="hideOtherRadio(size)">
               <label>{{size.config_value}}</label>
             </md-radio-button>
-            <md-radio-button name="other_size_radio" ng-model="productInfo.other_size_radio" ng-value="productInfo.other_size_radio" aria-label="other_size_radio" ng-click="showHideOtherDetail()">
+            <md-radio-button name="other_size_radio" ng-model="productInfo.other_size_radio" aria-label="other_size_radio" ng-click="showHideOtherDetail()">
               <label>If Others: please specify below</label>
             </md-radio-button>
           </md-radio-group>
@@ -48,7 +48,7 @@
         <legend class="standard">Type</legend>
           <div layout="column" layout-wrap flex>
             <div flex-xs layout="row">
-                <md-checkbox aria-label="{{type.config_value}}" name="type.config_code"
+                <md-checkbox aria-label="{{type.config_value}}" ng-checked="checkedByInserted(type.config_id)" name="type.config_code"
                 ng-repeat="type in types" ng-value="type.config_id" ng-click="checkedType(type.config_id, productInfo.type_id)">
                 {{type.config_value}}
                 </md-checkbox>

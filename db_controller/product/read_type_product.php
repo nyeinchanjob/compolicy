@@ -16,19 +16,10 @@
 	$data = json_decode(file_get_contents('php://input'));
 
 	$product->id = $data->id;
-  $product->readOne();
+  $product->readType();
 
   $product_arr[] = array(
-    'id' => $product->id,
-    'code' => $product->code,
-    'name' => $product->name,
-		'brandId' => $product->brandId,
-		'sizeId' => $product->sizeId,
-		'otherSizeStatus' => $product->otherSizeStatus,
-		'otherSizeDetail' => $product->otherSizeDetail,
-		'otherTypeStatus' => $product->otherTypeStatus,
-		'otherTypeDetail' => $product->otherTypeDetail,
-    'status' => $product->status
+		'typeId' => $product->typeId
   );
 
   print_r(json_encode($product_arr));
