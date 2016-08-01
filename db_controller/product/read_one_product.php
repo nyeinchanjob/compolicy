@@ -24,9 +24,7 @@
     'name' => $product->name,
 		'brandId' => $product->brandId,
 		'sizeId' => $product->sizeId,
-		'otherSizeStatus' => $product->otherSizeStatus,
 		'otherSizeDetail' => $product->otherSizeDetail,
-		'otherTypeStatus' => $product->otherTypeStatus,
 		'otherTypeDetail' => $product->otherTypeDetail,
     'status' => $product->status
   );

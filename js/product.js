@@ -12,15 +12,14 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 		product_name: undefined,
 		brand_id : undefined,
 		size_id : undefined,
-		other_size_radio : false,
 		other_size_detail : undefined,
 		type_id : [],
-		other_type_checked : false,
 		other_type_detail : undefined,
 		product_status: true
 	}
+	$scope.other_size_radio = false;
 	$scope.checkedByInserted = false;
-
+	$scope.other_type_check = false;
 	$scope.cbselected = [];
 
 	$scope.showProductDetail = function() {
@@ -120,8 +119,8 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			$scope.brands = response.records[0].brands;
 			$scope.sizes = response.records[1].sizes;
 			$scope.types = response.records[2].types;
-			$scope.productInfo.size_id = response.records[1].sizes[0]['config_id'];
-			console.log(response.records[1].sizes[0]['config_id']);
+			if (action == 'new') { $scope.productInfo.size_id = response.records[1].sizes[0]['config_id'];}
+
 		})
 	};
 
@@ -135,41 +134,48 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 				product_name : data[0]['name'],
 				brand_id : data[0]['brandId'],
 				size_id : data[0]['sizeId'],
-				typeId :[],
-				other_size_radio : data[0]['otherSizeStatus'] == '1' ? true : false,
+				type_id :[],
 				other_size_detail : data[0]['otherSizeDetail'],
-				other_type_checked : data[0]['otherTypeStatus'] == '1' ? true : false,
 				other_type_detail : data[0]['otherTypeDetail'],
 				product_status: data[0]['status'] == '1' ? true : false
 			};
+			if (data[0]['otherSizeDetail'].length>0) { $scope.other_size_radio = true; }
+			if (data[0]['otherTypeDetail'].length>0) { $scope.other_type_check = true; }
+
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent('Loading data caught Error. Please try again!')
-					.position('top right' )
+					.position('top left' )
 					.hideDelay(2000)
 				);
 		});
+
 		$http.post('db_controller/product/read_type_product.php', {
 			'id' : id
 		}).success(function(data, status, headers, config) {
-			$scope.productInfo.typeId = data[0]['typeId'];
+			$scope.productInfo.type_id = data[0]['typeId'];
+
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent('Loading data caught on Type Error. Please try again!')
-					.position('top right' )
+					.position('top left' )
 					.hideDelay(2000)
 				);
 		});
 
 	}
 
+	$scope.hideOtherRadio = function(item) {
+				$scope.other_size_radio = item.config_code == 'oth' ? true : false;
+	};
+
 	$scope.checkedByInserted = function(id) {
-		if ($scope.productInfo.typeId.length>0) {
+		if ($scope.productInfo.type_id.length>0) {
 			var checked = false;
-			for(var i = 0; i< $scope.productInfo.typeId.length; i++) {
-				if (id == $scope.productInfo.typeId[i]) {
+			for(var i = 0; i< $scope.productInfo.type_id.length; i++) {
+				if (id == $scope.productInfo.type_id[i]) {
 					checked = true;
 				}
 			}
@@ -179,17 +185,6 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 
 	$scope.buttonAction = action == 'new' ? 'save' : 'update';
 
-	$scope.showHideOtherDetail = function() {
-		$scope.productInfo.size_id = undefined;
-		$scope.productInfo.other_size_radio = $scope.productInfo.other_size_radio == true ? false : true;
-	};
-
-	$scope.hideOtherRadio = function(item) {
-		console.log(item.config_id);
-		$scope.productInfo.size_id = item.config_id;
-		$scope.productInfo.other_size_radio = false;
-	};
-
 	$scope.cancel = function() {
 		$scope.productInfo = {
 			product_id: undefined,
@@ -197,10 +192,8 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			product_name: undefined,
 			brand_id : undefined,
 			size_id : undefined,
-			other_size_radio : false,
 			other_size_detail : undefined,
 			type_id : [],
-			other_type_checked : false,
 			other_type_detail : undefined,
 			product_status: true
 		}
@@ -212,11 +205,14 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.checkedType = function(item, list) {
-		var idx = list.indexOf(item);
+		var idx = list.indexOf(item.config_id);
 		if (idx > -1) {
 			list.splice(idx, 1);
 		} else {
-			list.push(item);
+			list.push(item.config_id);
+		}
+		if (item.config_code == 'oth') {
+			$scope.other_type_check =  !$scope.other_type_check;
 		}
 	};
 
@@ -229,11 +225,9 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 				'code': $scope.productInfo.product_code,
 				'name': $scope.productInfo.product_name,
 				'brandId' : $scope.productInfo.brand_id,
-				'sizeId' : $scope.productInfo.size_id == true || $scope.productInfo.size_id == false ? undefined : $scope.productInfo.size_id,
+				'sizeId' :  $scope.productInfo.size_id,
 				'typeId' : $scope.productInfo.type_id,
-				'sizeOtherStatus': $scope.productInfo.other_size_radio,
 				'sizeOtherDetail': $scope.productInfo.other_size_detail,
-				'typeOtherStatus': $scope.productInfo.other_type_checked,
 				'typeOtherDetail': $scope.productInfo.other_type_detail,
 				'status': $scope.productInfo.product_status
 			}).success(function(data, status, headers, config) {
@@ -243,10 +237,8 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 					product_name: undefined,
 					brand_id : undefined,
 					size_id : undefined,
-					other_size_radio : false,
 					other_size_detail : undefined,
 					type_id : [],
-					other_type_checked : false,
 					other_type_detail : undefined,
 					product_status: true
 				};
@@ -256,7 +248,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent('Data are undefined. System can not save.')
-					.position('top right' )
+					.position('top left' )
 					.hideDelay(2000)
 				);
 		}
@@ -273,9 +265,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 				'brandId' : $scope.productInfo.brand_id,
 				'sizeId' : $scope.productInfo.size_id,
 				'typeId' : $scope.productInfo.type_id,
-				'sizeOtherStatus': $scope.productInfo.other_size_radio,
 				'sizeOtherDetail': $scope.productInfo.other_size_detail,
-				'typeOtherStatus': $scope.productInfo.other_type_check,
 				'typeOtherDetail': $scope.productInfo.other_type_detail,
 				'status': $scope.productInfo.product_status
 			}).success(function(data, status, headers, config) {
@@ -285,10 +275,8 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 					product_name: undefined,
 					brand_id : undefined,
 					size_id : undefined,
-					other_size_radio : false,
 					other_size_detail : undefined,
 					type_id : [],
-					other_type_checked : false,
 					other_type_detail : undefined,
 					product_status: true
 				};
@@ -298,7 +286,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent('Data are undefined. System can not update.')
-					.position('top right' )
+					.position('top left' )
 					.hideDelay(2000)
 				);
 		}

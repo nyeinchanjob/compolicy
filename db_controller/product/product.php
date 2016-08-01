@@ -10,10 +10,8 @@ class Product {
 	public $name;
 	public $brandId;
 	public $sizeId;
-	public $otherSizeStatus;
 	public $otherSizeDetail;
 	public $typeId;
-	public $otherTypeStatus;
 	public $otherTypeDetail;
 	public $status;
 
@@ -46,22 +44,18 @@ class Product {
 			'. $this->table_name . '(
 						`product_code`,
 						`product_name`,
-						`brand_id`,';
-		if (count($this->sizeId)>0) { $query .='`size_id`,'; }
-		$query .= '`size_other_status`,
-							 `size_other_text`,
-							 `type_other_status`,
-							 `type_other_text`,
-							 `product_status`) VALUES (
+						`brand_id`,
+						`size_id`,
+						`size_other_text`,
+						`type_other_text`,
+						`product_status`) VALUES (
 								:code,
 			 				 	:name,
-			 				 	:brandId,';
-		if (count($this->sizeId)>0) { $query .=':sizeId,'; }
-				$query .=':sizeOtherStatus,
-				 					:sizeOtherDetail,
-				 					:typeOtherStatus,
-				 					:typeOtherDetail,
-				 					:status);';
+			 				 	:brandId,
+								:sizeId,
+								:sizeOtherDetail,
+				 				:typeOtherDetail,
+				 				:status);';
 
 		$stmt = $this->conn->prepare($query);
 		// posted values
@@ -74,10 +68,8 @@ class Product {
 		$stmt->bindParam(":code", $this->code, PDO::PARAM_STR);
 		$stmt->bindParam(":name", $this->name, PDO::PARAM_STR);
 		$stmt->bindParam(":brandId", $this->brandId, PDO::PARAM_INT);
-		if (count($this->sizeId)>0) { $stmt->bindParam(":sizeId", $this->sizeId, PDO::PARAM_INT); }
-		$stmt->bindParam(":sizeOtherStatus", $this->otherSizeStatus, PDO::PARAM_BOOL);
+		$stmt->bindParam(":sizeId", $this->sizeId, PDO::PARAM_INT);
 		$stmt->bindParam(":sizeOtherDetail", $this->otherSizeDetail, PDO::PARAM_STR);
-		$stmt->bindParam(":typeOtherStatus", $this->otherTypeStatus, PDO::PARAM_BOOL);
 		$stmt->bindParam(":typeOtherDetail", $this->otherTypeDetail, PDO::PARAM_STR);
 		$stmt->bindParam(":status", $this->status, PDO::PARAM_BOOL);
 		// execute query
@@ -147,8 +139,8 @@ class Product {
 
 	function readOne() {
 		$query = 'SELECT
-			id, product_code, product_name, brand_id, size_id, size_other_status,
-			size_other_text, type_other_status, type_other_text, product_status
+			id, product_code, product_name, brand_id, size_id,
+			size_other_text,  type_other_text, product_status
 			FROM
 			' . $this->table_name . '
 			WHERE id = ?
@@ -166,9 +158,7 @@ class Product {
 		$this->name = $row['product_name'];
 		$this->brandId = $row['brand_id'];
 		$this->sizeId = $row['size_id'];
-		$this->otherSizeStatus = $row['size_other_status'];
 		$this->otherSizeDetail = $row['size_other_text'];
-		$this->otherTypeStatus = $row['type_other_status'];
 		$this->otherTypeDetail = $row['type_other_text'];
 		$this->status = $row['product_status'];
 	}
@@ -200,26 +190,56 @@ class Product {
 				`product_name` = :name,
 				`brand_id` = :brandId,
 				`size_id` = :sizeId,
+				`size_other_text` = :sizeOtherDetail,
+				`type_other_text` = :typeOtherDetail,
 				`product_status` = :status
 			WHERE
 				`id` = :id';
 
 		$stmt = $this->conn->prepare($query);
+		// bind values
 		$this->code = htmlspecialchars(strip_tags($this->code));
 		$this->name = htmlspecialchars(strip_tags($this->name));
+		$this->otherSizeDetail = htmlspecialchars(strip_tags($this->otherSizeDetail));
+		$this->otherTypeDetail = htmlspecialchars(strip_tags($this->otherTypeDetail));
 		$this->status = htmlspecialchars(strip_tags($this->status));
 		// bind values
-		$stmt->bindParam(":code", $this->code);
-		$stmt->bindParam(":name", $this->name);
-		$stmt->bindParam(":brandId", $this->brandId);
-		$stmt->bindParam(":sizeId", $this->sizeId);
-		$stmt->bindParam(":status", $this->status);
+		$stmt->bindParam(":code", $this->code, PDO::PARAM_STR);
+		$stmt->bindParam(":name", $this->name, PDO::PARAM_STR);
+		$stmt->bindParam(":brandId", $this->brandId, PDO::PARAM_INT);
+		$stmt->bindParam(":sizeId", $this->sizeId, PDO::PARAM_INT);
+		$stmt->bindParam(":sizeOtherDetail", $this->otherSizeDetail, PDO::PARAM_STR);
+		$stmt->bindParam(":typeOtherDetail", $this->otherTypeDetail, PDO::PARAM_STR);
+		$stmt->bindParam(":status", $this->status, PDO::PARAM_BOOL);
 		$stmt->bindParam(":id", $this->id);
 
 		if ($stmt->execute()) {
+			if (count($this->typeId)>0) {
+				$product_id = $this->id;
+				$id_arr = array($this->id);
+				print_r($id_arr);
+				$this->id = $id_arr;
+				if($this->deleteProductType()) {
+					$queryDetail = 'INSERT INTO
+						' . $this->table_product_type . '(
+								`product_id`,	`type_id`) VALUES (
+								:productId, :typeId);';
+					for($i = 0; $i<count($this->typeId); $i++) {
+						$detail = $this->conn->prepare($queryDetail);
+						$detail->bindParam(":productId", $product_id, PDO::PARAM_INT);
+						$detail->bindParam(":typeId", $this->typeId[$i], PDO::PARAM_INT);
+						if($detail->execute() == false) {
+							//$this->delete();
+							echo '<pre> <br/>Product Type Error<br/>';
+								print_r($detail->errorInfo());
+							echo '</pre>';
+						}
+					}
+				}
+			}
 			return true;
 		} else {
-			echo '<pre>';
+			echo '<pre> <br/>Product Type Error<br/>';
 				print_r($stmt->errorInfo());
 			echo '</pre>';
 			return false;
@@ -230,6 +250,27 @@ class Product {
 		$query = 'DELETE FROM
 			' . $this->table_name . '
 			WHERE FIND_IN_SET(id, :array)
+		';
+
+		$stmt = $this->conn->prepare($query);
+		$ids_string = implode(',', $this->id);
+		$stmt->bindParam(':array', $ids_string);
+
+		if ($stmt->execute()) {
+			$this->deleteProductType();
+			return true;
+		} else {
+			echo '<pre>';
+				print_r($stmt->errorInfo());
+			echo '</pre>';
+			return false;
+		}
+	}
+
+	function deleteProductType() {
+		$query = 'DELETE FROM
+			' . $this->table_product_type . '
+			WHERE FIND_IN_SET(product_id, :array)
 		';
 
 		$stmt = $this->conn->prepare($query);

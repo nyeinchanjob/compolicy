@@ -20,9 +20,7 @@
 	$product->brandId	= $data->brandId;
 	$product->sizeId	= $data->sizeId;
 	$product->typeId	= $data->typeId;
-	$product->otherSizeStatus	= $data->sizeOtherStatus;
 	$product->otherSizeDetail	= $data->sizeOtherDetail;
-	$product->otherTypeStatus	= $data->typeOtherStatus;
 	$product->otherTypeDetail	= $data->typeOtherDetail;
 	$product->status = $data->status;
 

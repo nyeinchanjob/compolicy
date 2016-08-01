@@ -32,12 +32,9 @@
             <md-radio-button  ng-repeat="size in sizes" name="size.config_code"  ng-value="size.config_id" aria-label="{{size.config_value}}" ng-click="hideOtherRadio(size)">
               <label>{{size.config_value}}</label>
             </md-radio-button>
-            <md-radio-button name="other_size_radio" ng-model="productInfo.other_size_radio" aria-label="other_size_radio" ng-click="showHideOtherDetail()">
-              <label>If Others: please specify below</label>
-            </md-radio-button>
           </md-radio-group>
-          <md-input-container class="md-block md-subheader" flex ng-show="productInfo.other_size_radio">
-            <label>Other</label>
+          <md-input-container class="md-block md-subheader" flex ng-show="other_size_radio">
+            <label>If Others: please specify below</label>
             <input ng-model="productInfo.other_size_detail" name="other_size_detail">
             <div ng-messages="productDetail.other_size_detail.$error">
             <div ng-message="required">If you chose Others, this is required.</div></div>
@@ -47,18 +44,14 @@
         <fieldset class="standard">
         <legend class="standard">Type</legend>
           <div layout="column" layout-wrap flex>
-            <div flex-xs layout="row">
+            <div flex-xs layout-wrap layout="row">
                 <md-checkbox aria-label="{{type.config_value}}" ng-checked="checkedByInserted(type.config_id)" name="type.config_code"
-                ng-repeat="type in types" ng-value="type.config_id" ng-click="checkedType(type.config_id, productInfo.type_id)">
+                ng-repeat="type in types" ng-value="type.config_id" ng-click="checkedType(type, productInfo.type_id)">
                 {{type.config_value}}
                 </md-checkbox>
             </div>
-            <md-checkbox aria-label="typeOfOther" name="typeOfOther"
-                ng-model="productInfo.other_type_checked" ng-click="disableOtherType()">
-                  If Others: please specify below
-                </md-checkbox>
-            <md-input-container class="md-block md-subheader" flex ng-show="productInfo.other_type_checked">
-              <label>Other</label>
+            <md-input-container class="md-block md-subheader" flex ng-show="other_type_check">
+              <label>If Others: please specify here</label>
               <input ng-model="productInfo.other_type_detail" name="other_type_detail">
               <div ng-messages="productDetail.other_type_detail.$error">
               <div ng-message="required">If you chose Others, this is required.</div></div>

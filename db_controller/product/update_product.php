@@ -18,6 +18,11 @@
   $product->id = $data->id;
 	$product->code = $data->code;
 	$product->name	= $data->name;
+	$product->brandId	= $data->brandId;
+	$product->sizeId	= $data->sizeId;
+	$product->typeId	= $data->typeId;
+	$product->otherSizeDetail	= $data->sizeOtherDetail;
+	$product->otherTypeDetail	= $data->typeOtherDetail;
 	$product->status = $data->status;
 
 	if ($product->update()) {
