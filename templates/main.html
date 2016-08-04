@@ -1,9 +1,8 @@
 <md-content flex layout="column" layout-fill>
   <md-toolbar class="md-toolbar-tools shadow-z-1" layout="row" style="background-color:#F44336;">
     <md-button class="md-icon-button" ng-show="true" aria-label="menu" ng-hide="isOpenLeft()" ng-click="toggleLeft()">
-      <md-icon md-svg-icon="img/icons/bottle_white_24px.svg"></md-icon>
+      <md-icon md-svg-icon="img/icons/menu_white_24px.svg"></md-icon>
     </md-button>
-
     <label class="md-title" layout-padding>Outlet Survey</label>
     <span flex="5">&nbsp;</span>
     <md-content flex style="background-color:#F44336; border-radius:2px;">
@@ -17,20 +16,15 @@
         md-items=""
         md-item-text=""
         md-min-length="0"
-        placeholder="Search" style="background-color:#FF8A80; color:white; border-radius:3px;">
-
+        placeholder="Search" style="background-color:#FF8A80; color:white; border-radius:3px;"
+	ng-hide="isOpenLeft()"
+	>
       </md-autocomplete>
     </md-content>
     <span flex="5">&nbsp;</span>
-    <div layout="row" layout-align="center center">
-      <md-button class="md-icon-button" ng-show="true" aria-label="favrioute">
-        <md-icon md-svg-icon="img/icons/bottle_white_24px.svg"></md-icon>
-      </md-button>
-      <md-button class="md-icon-button" ng-show="true" aria-label="edit">
-        <md-icon md-svg-icon="img/icons/bottle_white_24px.svg"></md-icon>
-      </md-button>
+    <div layout="row" layout-align="center center" ng-hide="isOpenLeft()">
       <md-button class="md-icon-button" ng-show="true" aria-label="delete" ng-click="logout()">
-        <md-icon md-svg-icon="img/icons/bottle_white_24px.svg"></md-icon>
+        <md-icon md-svg-icon="img/icons/lock_white_24px.svg"></md-icon>
       </md-button>
     </div>
   </md-toolbar>
@@ -39,20 +33,28 @@
     md-component-id="left" >
       <md-content flex layout="column" class="content-color">
         <md-list>
-          <md-subheader class="md-no-sticky body-color">Categories</md-subheader>
-          <md-list-item ng-click="show_layout='product_list'" class="md-actions content-color">
-            <md-icon md-svg-icon="img/icons/bottle_24px.svg"></md-icon>
-            <p>Product</p>
+          <md-subheader class="md-no-sticky body-color">Survey</md-subheader>
+          <md-list-item ng-click="show_layout='survey_list'" class="md-actions content-color">
+            <md-icon md-svg-icon="img/icons/contacts_red_24px.svg"></md-icon>
+            <p>Outlet</p>
           </md-list-item>
-          <md-list-item ng-click="show_layout='deals_list'" class="md-actions">
-            <md-icon md-svg-icon="img/icons/bottle_24px.svg"></md-icon>
-            <p>Role</p>
-          </md-list-item>
-          <md-divider></md-divider>
-          <md-subheader class="md-no-sticky body-color">List</md-subheader>
-          <md-list-item ng-click="show_layout='deals_range_list'" class="md-actions">
-            <md-icon md-svg-icon="img/icons/bottle_24px.svg"></md-icon>
-            <p>Deals Range</p>
+	 <md-list-item ng-click="show_layout='report_list'" class="md-actions content-color">
+	 	<md-icon md-svg-icon="img/icons/report_red_24px.svg"></md-icon>
+		   <p>Report</p>
+	 </md-list-item>
+          <md-subheader class="md-no-sticky body-color">Setting</md-subheader>
+  	 <md-list-item ng-click="show_layout='role_list'" class="md-actions">
+     		<md-icon md-svg-icon="img/icons/role_red_24px.svg"></md-icon>
+    	 	<p>Roles</p>
+   	</md-list-item>
+           <md-list-item ng-click="show_layout='user_list'" class="md-actions">
+             <md-icon md-svg-icon="img/icons/account_red_24px.svg"></md-icon>
+             <p>Users</p>
+           </md-list-item>
+	<md-divider></md-divider>
+        <md-list-item ng-click="show_layout='config_list'" class="md-actions">
+            <md-icon md-svg-icon="img/icons/setting_red_24px.svg"></md-icon>
+            <p>Set up</p>
           </md-list-item>
         </md-list>
         <spand flex layout-fill>&nbsp;</spand>
@@ -61,9 +63,11 @@
       <div flex layout-fill ng-include="'templates/login/login.html'"
         ng-show="!$root.loginCorrect"  layout-align="center start" class="body-color"></div>
       <md-content class="container body-content body-color" md-scroll-y flex ng-show="loginCorrect">
-        <div flex ng-show="show_layout=='product_list'" ng-include="'templates/product/product_list.html'"></div>
-        <div flex ng-show="show_layout=='deals_list'" ng-include="'templates/deals/deals_list.html'"></div>
-        <div flex ng-show="show_layout=='deals_range_list'" ng-include="'templates/deals_range/deals_range_list.html'"></div>
+        <div flex ng-show="show_layout=='survey_list'" ng-include="'templates/surveys/survey_list.html'"></div>
+        <div flex ng-show="show_layout=='report_list'" ng-include="'templates/reports/report_list.html'"></div>
+        <div flex ng-show="show_layout=='config_list'" ng-include="'templates/configs/config_list.html'"></div>
+	       <div flex ng-show="show_layout=='user_list'" ng-include="'templates/users/user_list.html'"></div>
+	       <div flex ng-show="show_layout=='role_list'" ng-include="'templates/roles/role_list.html'"></div>
       </md-content>
   </md-content>
 </md-content>

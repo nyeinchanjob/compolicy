@@ -20,7 +20,7 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav) {
     $scope.checked_show = false;
     $scope.bundle_deals = [];
     $rootScope.loginCorrect = false;
-    $scope.show_layout='product_list';
+    $scope.show_layout='survey_list';
 
     $scope.toggleLeft = buildToggler('left');
 

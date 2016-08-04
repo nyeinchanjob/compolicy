@@ -98,4 +98,47 @@ WHERE
 LIMIT 
 	0,1;
     
+describe product;
+alter table product
+change column brand brand_id integer,
+change column size size_id integer,
+change column `type` type_id integer;
     
+create table if not exists product_brand(
+	id integer not null primary key auto_increment,
+    product_id integer,
+    type_id integer
+);
+
+alter table product_brand
+rename to product_type;
+
+alter table product
+drop column type_id;
+
+alter table product
+add column type_other_status boolean,
+add column type_other_text text;
+
+alter table product
+add column size_other_status boolean,
+add column size_other_text text;
+
+select `id` FROM `product` ORDER BY `id` DESC LIMIT 0,1;
+
+describe product_type;
+
+describe product;
+
+truncate table product;
+truncate table product_type;
+select * from product;
+select * from product_type;
+
+insert into config(config_code, config_value, config_type, config_status) values
+('oth', 'Others', 'size',1),
+('oth', 'Others', 'type', 1);
+
+alter table product
+drop column type_other_status,
+drop column size_other_status;

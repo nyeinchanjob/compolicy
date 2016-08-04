@@ -1,0 +1,34 @@
+<md-dialog ng-cloak>
+  <form name="configDetail">
+    <md-toolbar class="md-warn">
+      <div class="md-toolbar-tools">
+          <span class="md-title" flex>{{configInfo.config_value == undefined ? 'Configuration' : configInfo.config_value}} Detail</span>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content" layout="column" flex ng-init="loadConfig()">
+        <md-input-container class="md-block md-subheader" flex>
+          <label>Name</label>
+          <input required ng-model="configInfo.config_value" name="config_value">
+          <div ng-messages="configDetail.config_value.$error">
+          <div ng-message="required">This is required.</div></div>
+        </md-input-container>
+        <md-input-container class="md-block md-subheader" flex>
+          <label>Type</label>
+          <input required ng-model="configInfo.config_type" name="config_type">
+          <div ng-messages="configDetail.config_type.$error">
+          <div ng-message="required">This is required.</div></div>
+        </md-input-container>
+        <md-checkbox aria-label="config_active" name="config_status"
+        ng-model="configInfo.config_status" ng-click="changeActive(configInfo.config_status)">
+          Active
+        </md-checkbox>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex>&nbsp;</span>
+      <md-button ng-click="cancel();">Cancel</md-button>
+      <md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() ">{{buttonAction}}</md-button>
+    </md-dilaog-actions>
+  </form>
+</md-dialog>
