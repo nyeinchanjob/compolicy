@@ -13,6 +13,20 @@
           <div ng-messages="roleDetail.role_name.$error">
           <div ng-message="required">This is required.</div></div>
         </md-input-container>
+        <div layout="column" flex layout-wrapping>
+          <div flex layout="row">
+            <span flex>Authorization</span>
+            <span ng-repeat="name in controls" flex>{{name.config_value}}</span>
+          </div>
+          <md-card ng-repeat="menu in items">
+            <span class="md-subheader">{{menu.config_value}}</span>
+            <div flex layout="row">
+              <md-checkbox ng-repeat="control in controls" aria-label="control.config_value"
+              name="control.config_value" layout-align="center center" >
+              </md-checkbox>
+            </div>
+          </md-card>
+        </div>
         <md-checkbox aria-label="role_active" name="role_status"
         ng-model="roleInfo.role_status" ng-click="changeActive(roleInfo.role_status)">
           Active

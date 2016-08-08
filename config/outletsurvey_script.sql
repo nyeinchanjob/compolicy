@@ -60,3 +60,5 @@ insert into `config`(`config_value`, `config_type`) values
 ('Read','control'),
 ('Update','control'),
 ('Delete','control');
+
+select distinct `config_type` from `config` where not find_in_set('menus', 'controls') order by `config_type` desc;

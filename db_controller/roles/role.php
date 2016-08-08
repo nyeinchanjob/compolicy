@@ -2,10 +2,15 @@
 class Role {
   private $conn;
   private $table_name = 'role';
+  private $table_config = 'config';
+
   private $sysadmin = 'sysadmin';
+
   public $id;
   public $name;
   public $status;
+
+  public $type;
 
 
   public function __construct($db) {
@@ -74,6 +79,38 @@ class Role {
     $this->id = $row['id'];
     $this->name = $row['role_name'];
     $this->status = $row['role_status'];
+  }
+
+  function readAllType() {
+    $query = 'SELECT DISTINCT `config_type`
+    FROM `' . $this->table_name .'`
+     WHERE NOT FIND_IN_SET(`config_type`, :array)
+      AND  `config_status` = 1
+      ORDER BY `config_type`;';
+    $stmt = $this->conn->prepare($query);
+    $sys_string = implode(',', $this->sys);
+    $stmt->bindParam(":array", $sys_string);
+    if($stmt->execute()) {
+        return $stmt;
+    } else {
+      echo 'Yae';
+    }
+
+  }
+
+  function readMenuConfig() {
+    $query = 'SELECT `id`, `config_value`, `config_type`,
+    `config_status` FROM `' . $this->table_config .'`
+     WHERE `config_type` = :type
+      AND `config_status` = 1
+       ORDER BY `id` DESC;';
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":type", $this->type, PDO::PARAM_STR);
+    if($stmt->execute()) {
+        return $stmt;
+    } else {
+      echo 'Yae';
+    }
   }
 
   function update() {

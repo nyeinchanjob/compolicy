@@ -1,5 +1,4 @@
 //angular.module('MyConfig', ['ngMaterial', 'ngMessages'])
-(function() {
 var MyApp = angular.module('MyApp');
 MyApp.controller('ConfigCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', function(
 	$scope, $mdDialog, $http, $mdToast) {
@@ -109,7 +108,6 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 		$http.post('db_controller/configs/read_one_config.php', {
 			'id': id
 		}).success(function(data, status, headers, config) {
-			console.log(data[0]);
 			$scope.configInfo = {
 				id : data[0]['id'],
 				config_value : data[0]['value'],
@@ -253,5 +251,3 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 	};
 
 });
-
-})();

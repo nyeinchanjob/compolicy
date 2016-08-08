@@ -1,5 +1,4 @@
 //angular.module('MyRole', ['ngMaterial', 'ngMessages'])
-(function() {
 var MyApp = angular.module('MyApp');
 MyApp.controller('RoleCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', function(
 	$scope, $mdDialog, $http, $mdToast) {
@@ -121,6 +120,16 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 					.hideDelay(2000)
 				);
 		});
+	}
+	$scope.loadConfig = function () {
+
+		$http.post('db_controller/roles/read_config.php', {
+			'config_type': ['menu', 'control']
+		}).success(function(response) {
+			console.log(response.records[0]);
+			$scope.items = response.records[0]['data'];
+			$scope.controls = response.records[1]['data'];
+		});
 	};
 
 	$scope.buttonAction = action == 'new' ? 'save' : 'update';
@@ -241,5 +250,3 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 	};
 
 });
-
-})();

@@ -15,7 +15,7 @@
     </div>
     <md-content flex class="body-color rounded-block md-padding" layout="column" >
       <md-card class="dark-body-color" ng-repeat="group in groups">
-        <span class="md-title md-padding">{{group.type}}</span>
+        <span class="md-title md-primary md-padding">{{group.type | uppercase}}</span>
         <div ng-repeat="item in group.data">
           <md-card layout="row" layout-align="start center">
             <md-checkbox class="margin-fifteen" aria-label="select_edit" ng-checked="exists(item.id, cbselected)" ng-click="checkedToEdit(item.id, cbselected);"></md-checkbox>
