@@ -17,7 +17,7 @@ MyApp.controller('ConfigCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', func
 
 	$scope.showConfigDetail = function() {
 		$mdDialog.show({
-			controller: 'DialogCtrl',
+			controller: 'ConfigDialogCtrl',
 			templateUrl: 'templates/configs/config_detail.html',
 			locals: {
 				id: undefined,
@@ -40,7 +40,7 @@ MyApp.controller('ConfigCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', func
 
 	$scope.readOne = function(id) {
 		$mdDialog.show({
-			controller: 'DialogCtrl',
+			controller: 'ConfigDialogCtrl',
 			templateUrl: 'templates/configs/config_detail.html',
 			locals: {
 				id: id,
@@ -102,7 +102,7 @@ MyApp.controller('ConfigCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', func
 
 }]);
 
-MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, action) {
+MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, action) {
 
 	if (id != undefined) {
 		$http.post('db_controller/configs/read_one_config.php', {

@@ -1,0 +1,95 @@
+<md-content flex layout-fill ng-cloak="">
+	<form name="outletDetail">
+    		<md-content class="container">
+      			<div class="" layout="column" flex ng-init="" >
+							<!-- #Area -->
+      				<md-input-container class="md-block">
+      					<label>Area</label>
+      					<input required class="pyidaungsu" ng-model="outletInfo.outlet_area" name="outlet_area">
+								<div class="hint pyidaungsu">Name of area (e.g. Yangon, Bago, ..., etc.)</div>
+      				</md-input-container>
+							<!-- #City -->
+							<div layout="row" flex>
+								<md-input-container class="md-block" flex>
+				          <label class="pyidaungsu">မြို့</label>
+				          <input class="pyidaungsu" required ng-model="outletInfo.city_mm" name="city_mm">
+									<div class="hint pyidaungsu">မြန်မာ</div>
+				        </md-input-container>
+								<md-input-container class="md-block" flex>
+				          <label>City</label>
+				          <input  required ng-model="outletInfo.city_eng" name="city_eng">
+									<div class="hint pyidaungsu">English.</div>
+				        </md-input-container>
+							</div>
+							<!-- #Township -->
+							<div layout="row" flex>
+								<md-input-container class="md-block" flex>
+				          <label class="pyidaungsu"  class="pyidaungsu">မြို့နယ်</label>
+				          <input required ng-model="outletInfo.township_mm" name="township_mm">
+									<div class="hint pyidaungsu">မြန်မာ</div>
+				        </md-input-container>
+								<md-input-container class="md-block" flex>
+				          <label>Township</label>
+				          <input required ng-model="outletInfo.township_eng" name="township_eng">
+									<div class="hint pyidaungsu"> English.</div>
+				        </md-input-container>
+							</div>
+							<!-- #Ward -->
+							<div layout="row" flex>
+								<md-input-container class="md-block" flex>
+				          <label class="pyidaungsu">ရပ်ကွက်</label>
+				          <input class="pyidaungsu" required ng-model="outletInfo.ward_mm" name="ward_mm">
+									<div class="hint pyidaungsu">မြန်မာ</div>
+				        </md-input-container>
+								<md-input-container class="md-block" flex>
+				          <label>Ward</label>
+				          <input required ng-model="outletInfo.ward_eng" name="ward_eng">
+									<div class="hint pyidaungsu">English.</div>
+				        </md-input-container>
+							</div>
+							<!-- #Outlet Code -->
+      				<md-input-container class="md-block" >
+      					<label>Outlet Code</label>
+      					<input required class="pyidaungsu" ng-model="outletInfo.outlet_code" name="outlet_code">
+								<div class="hint pyidaungsu">Use only number(0 ~ 9).</div>
+      				</md-input-container>
+							<!-- #Outlet Name -->
+							<div layout="row" flex>
+								<md-input-container class="md-block" flex>
+				          <label class="pyidaungsu">ဆိုင်အမည်</label>
+				          <input class="pyidaungsu" required ng-model="outletInfo.outletName_mm" name="outletName_mm">
+									<div class="hint pyidaungsu">မြန်မာ</div>
+				        </md-input-container>
+								<md-input-container class="md-block" flex>
+				          <label>Outlet Name</label>
+				          <input required ng-model="outletInfo.outletName_eng" name="outletName_eng">
+									<div class="hint pyidaungsu">English.</div>
+				        </md-input-container>
+							</div>
+							<!-- #Owner Name -->
+							<div layout="row" flex>
+								<md-input-container class="md-block" flex>
+				          <label class="pyidaungsu">ပိုင်ရှင်အမည်</label>
+				          <input class="pyidaungsu" required ng-model="outletInfo.ownerName_mm" name="ownerName_mm">
+									<div class="hint pyidaungsu">မြန်မာ</div>
+				        </md-input-container>
+								<md-input-container class="md-block" flex>
+				          <label>Owner Name</label>
+				          <input required ng-model="outletInfo.ownerName_eng" name="ownerName_eng">
+									<div class="hint pyidaungsu">English.</div>
+				        </md-input-container>
+							</div>
+							<!-- #Phone -->
+      				<md-input-container class="md-block" flex>
+      					<label>Phone</label>
+      					<input required class="pyidaungsu" ng-model="outletInfo.outlet_phone" name="outlet_phone">
+								<div class="hint pyidaungsu">Use only number(0 ~ 9).</div>
+      				</md-input-container>
+							<md-checkbox aria-label="product_active" name="product_status"
+			        ng-model="productInfo.product_status" ng-click="changeActive(productInfo.product_status)">
+			          Active
+			        </md-checkbox>
+      </div>
+    </md-content>
+  </form>
+</md-content>

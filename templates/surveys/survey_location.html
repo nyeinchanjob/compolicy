@@ -1,0 +1,37 @@
+<md-content ng-cloak flex layout-fill ng-cloak="">
+  <form name="OutletDetail">
+    <div layout="row" flex layout-align="center center">
+      <md-card layout="column" flex>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Outlet location</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-content layout="column">
+          <img layout-padding ng-src="{{geo_path}}" class="md-card-image" alt="outlet_location">
+          <div layout="row" flex layout-padding layout-warp>
+            <span flex>Latitude : {{outlet_lat}}</span>
+            <span flex>Longitude : {{outlet_log}}</span>
+          </div>
+        </md-content>
+        <md-card-action layout="row" layout-align="end center">
+          <md-button ng-click="initiate_geolocation();">Get Location</md-button>
+        </md-card-action>
+      </md-card>
+
+      <md-card layout="column" flex>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Outlet Photo</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-content layout="column">
+          <img layout-padding ng-show="thumbnail.dataUrl != null" ng-src="{{ thumbnail.dataUrl }}" class="md-card-image" alt="outlet_image"/>
+        </md-content>
+        <md-card-action layout="row" layout-align="start center">
+          <input type="file" name="file" onchange="angular.element(this).scope().photoChanged(this.files)" />
+        </md-card-action>
+      </md-card>
+    </div>
+  </form>
+</md-content>

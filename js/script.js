@@ -1,5 +1,5 @@
 var i = 0;
-var MyApp = angular.module('MyApp', ['ngMaterial', 'ngMessages']);
+var MyApp = angular.module('MyApp', ['ngMaterial', 'ngMessages', 'ngFileUpload']);
 
 MyApp.run(function ($rootScope) {
     $rootScope.$on('scope.stored', function (event, data) {

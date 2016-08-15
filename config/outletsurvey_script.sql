@@ -62,3 +62,23 @@ insert into `config`(`config_value`, `config_type`) values
 ('Delete','control');
 
 select distinct `config_type` from `config` where not find_in_set('menus', 'controls') order by `config_type` desc;
+
+select * from `config`;
+
+update `config` set
+	`config_value` = 'Set Up'
+where `id` = 5;
+
+select * from `control`;
+
+truncate table `control`;
+
+alter table `control`
+drop column `control_code`,
+drop column `control_description`,
+drop column `control_status`;
+
+alter table `control`
+add column `config_id` integer;
+
+drop table `menu`;

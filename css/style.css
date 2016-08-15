@@ -47,3 +47,31 @@ md-autocomplete {
 .margin-fifteen {
   margin: 15px;
 }
+
+@font-face {
+	font-family: 'Pyidaungsu';
+	src: url('fonts/pyidaungsu-1-3.eot'); /* IE9 Compat Modes */
+	src: url('fonts/pyidaungsu-1-3.eot?#iefix') format('embedded-opentype'), /* IE6 ~ IE8*/
+		url('fonts/pyidaungsu-1-3.svg#Pyidaungsu') format('svg'),
+		url('fonts/pyidaungsu-1-3.ttf') format('truetype'),
+		url('fonts/pyidaungsu-1-3.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+/*url('fonts/pyidaungsu-1-3.otf') format('opentype'),*/	/* Legacy iOS*/
+.pyidaungsu {
+	font-family: 'Pyidaungsu';
+}
+
+.hint {
+    /* Position the hint */
+    position: absolute;
+    left: 2px;
+    right: auto;
+    bottom: 7px;
+    /* Copy styles from ng-messages */
+    font-size: 12px;
+    line-height: 14px;
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    /* Set our own color */
+    color: grey; }

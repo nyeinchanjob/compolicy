@@ -15,8 +15,10 @@
 
 	$data = json_decode(file_get_contents('php://input'));
 
-  $role->id = $data->id;
+	$role->id = $data->id;
 	$role->name	= $data->name;
+	$role->permission = $data->permission;
+	$role->menu_arr = $data->menu_list;
 	$role->status = $data->status;
 
 	if ($role->update()) {

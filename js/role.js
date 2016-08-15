@@ -11,11 +11,13 @@ MyApp.controller('RoleCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', functi
 		role_status: true
 	}
 	$scope.org_name = '';
+	$scope.permissionSelected = {};
 	$scope.cbselected = [];
+	$scope.menu_arr = [];
 
 	$scope.showRoleDetail = function() {
 		$mdDialog.show({
-			controller: 'DialogCtrl',
+			controller: 'RoleDialogCtrl',
 			templateUrl: 'templates/roles/role_detail.html',
 			locals: {
 				id: undefined,
@@ -38,7 +40,7 @@ MyApp.controller('RoleCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', functi
 
 	$scope.readOne = function(id) {
 		$mdDialog.show({
-			controller: 'DialogCtrl',
+			controller: 'RoleDialogCtrl',
 			templateUrl: 'templates/roles/role_detail.html',
 			locals: {
 				id: id,
@@ -100,9 +102,19 @@ MyApp.controller('RoleCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', functi
 
 }]);
 
-MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, action) {
+MyApp.controller('RoleDialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, action) {
 
 	if (id != undefined) {
+			$http.post('db_controller/roles/read_config.php', {   	
+        			'config_type': ['menu', 'control']
+        		}).success(function(response) {
+        			$scope.menus = response.records[0]['data'];
+        			$scope.menu_arr = [];
+        			$scope.menus.forEach($scope.setMenuToArray);
+        			$scope.controls = response.records[1]['data'];
+        		});
+
+
 		$http.post('db_controller/roles/read_one_role.php', {
 			'id': id
 		}).success(function(data, status, headers, config) {
@@ -112,6 +124,21 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 				role_status: data[0]['status'] == '1' ? true : false
 			};
 			$scope.org_name = data[0]['name'];
+			$http.post('db_controller/roles/read_control.php', {
+				'role_id' : id
+			}).success(function(response) {
+				var rec = response.records;
+				for (var j = 0; j< $scope.menu_arr.length; j++) {
+					var arr = [];
+					for (var i = 0; i< rec.length; i++) {
+						if ($scope.menu_arr[j] == rec[i]['menu_value']) {
+							arr.push(rec[i]['config_id']);	
+						}			
+					}
+					$scope.permissionSelected[$scope.menu_arr[j]]['data'] = arr;
+				}
+				console.log($scope.permissionSelected);
+			});
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
 				$mdToast.simple()
@@ -126,10 +153,19 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 		$http.post('db_controller/roles/read_config.php', {
 			'config_type': ['menu', 'control']
 		}).success(function(response) {
-			console.log(response.records[0]);
-			$scope.items = response.records[0]['data'];
+			$scope.menus = response.records[0]['data'];
+			$scope.menu_arr = [];
+			$scope.menus.forEach($scope.setMenuToArray);
 			$scope.controls = response.records[1]['data'];
 		});
+	};
+	$scope.setMenuToArray = function(item) {
+		var arr = {};
+		arr['menu'] = item.config_value;
+		arr['id'] = item.id;
+		arr['data'] = [];
+		$scope.permissionSelected[item.config_value] = arr;
+		$scope.menu_arr.push(item.config_value); 
 	};
 
 	$scope.buttonAction = action == 'new' ? 'save' : 'update';
@@ -180,7 +216,9 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 	$scope.save = function() {
 		$http.post('db_controller/roles/create_role.php', {
 			'name': $scope.roleInfo.role_name,
-			'status': $scope.roleInfo.role_status
+			'status': $scope.roleInfo.role_status,
+			'permission' : $scope.permissionSelected,
+			'menu_list' : $scope.menu_arr
 		}).success(function(data, status, headers, config) {
 			$scope.roleInfo = {
 				id: undefined,
@@ -227,10 +265,13 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 	}
 
 	$scope.edit = function() {
+		console.log($scope.permissionSelected);
 		$http.post('db_controller/roles/update_role.php', {
 			'id': id,
 			'name': $scope.roleInfo.role_name,
-			'status': $scope.roleInfo.role_status
+			'status': $scope.roleInfo.role_status,
+			'permission': $scope.permissionSelected,
+			'menu_list': $scope.menu_arr
 		}).success(function(data, status, headers, config) {
 			$scope.roleInfo = {
 				id: undefined,
@@ -249,4 +290,43 @@ MyApp.controller('DialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, a
 		});
 	};
 
+	$scope.checkedPermission = function(control, menu, list) {
+		if (list[menu.config_value]['data'].length>0) {
+			var checked = false;
+			for(var i = 0; i< list[menu.config_value]['data'].length; i++) {
+				if (control.id == list[menu.config_value]['data'][i]) {
+					checked = true;
+				}
+			}
+			return checked;
+		}
+	};
+
+	$scope.clickedPermission = function(item, menu, list) {
+		var arr = list[menu.config_value]['data'];
+		var idx = arr.indexOf(item.id);
+		if (idx > -1) {
+			arr.splice(idx, 1);
+		} else {
+			arr.push(item.id);
+		}
+		list[menu.config_value]['data'] = arr;
+	}
+
+	$scope.clickedAll = function(menu, list) {
+		var arr = list[menu.config_value]['data'];
+		var arr_length = arr.length;
+		if (list[menu.config_value]['data'].length>0) {
+			for (var i = 0; i < arr_length; i++) {
+				arr.splice(0, 1);
+			}
+		} else {
+			arr = [];
+			for (var j = 0; j < Object.keys($scope.controls).length; j++) {
+				arr.push($scope.controls[j]['id']);
+			}
+		}
+		list[menu.config_value]['data'] = arr;
+		//$scope.checkedPermission($scope.controls[0], menu, list);
+	};
 });

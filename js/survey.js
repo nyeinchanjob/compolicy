@@ -1,12 +1,17 @@
 //angular.module('MyProduct', ['ngMaterial', 'ngMessages'])
 
 var MyApp = angular.module('MyApp');
-MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
-	$scope, $mdDialog, $http) {
+MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$timeout', function(
+	$scope, $mdDialog, $http, Upload, $timeout) {
 	$scope.cbValue = {};
 	$scope.cbValue.cbselect_all = false;
 	$scope.cbValue.cbselect_edit = false;
-	$scope.productInfo = {
+	$scope.show_detail = false;
+	$scope.show_layout='survey_info';
+	$scope.show_save = false;
+	$scope.show_previous = false;
+	$scope.show_next = true;
+	$scope.outletInfo = {
 		product_id: undefined,
 		product_code: undefined,
 		product_name: undefined,
@@ -23,18 +28,19 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 	$scope.cbselected = [];
 
 	$scope.showProductDetail = function() {
-		$mdDialog.show({
-			controller: DialogController,
-			templateUrl: 'templates/surveys/survey_detail.html',
-			locals: {
-				id: undefined,
-				action: 'new'
-			},
-			scope: $scope,
-			preserveScope: true,
-			parent: angular.element(document.body),
-			clickOutsideToClose: false,
-		});
+		$scope.show_detail = true;
+		// $mdDialog.show({
+		// 	controller: DialogController,
+		// 	templateUrl: 'templates/surveys/survey_detail.html',
+		// 	locals: {
+		// 		id: undefined,
+		// 		action: 'new'
+		// 	},
+		// 	scope: $scope,
+		// 	preserveScope: true,
+		// 	parent: angular.element(document.body),
+		// 	clickOutsideToClose: false,
+		// });
 	};
 
 	$scope.getAll = function() {
@@ -107,6 +113,88 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 			false;
 	}
 
+	$scope.next = function (layout) {
+		if (layout == "survey_info") {
+			$scope.show_layout = "survey_question";
+			$scope.show_previous = true;
+			$scope.show_save = false;
+		}
+		if (layout == "survey_question") {
+			$scope.show_layout = "survey_location";
+			$scope.show_save = true;
+			$scope.show_next = false;
+		}
+	}
+
+	$scope.previous = function (layout) {
+		if (layout == "survey_location") {
+			$scope.show_layout = "survey_question";
+			$scope.show_next = true;
+			$scope.show_save = false;
+		}
+		if (layout == "survey_question") {
+			$scope.show_layout = "survey_info";
+			$scope.show_save = false;
+			$scope.show_previous = false;
+		}
+	}
+
+	$scope.DetailClose = function() {
+		$scope.show_detail = false;
+	}
+	$scope.initiate_geolocation = function() {
+		// $scope.outlet_lat = '16.86';
+		// $scope.outlet_log = '96.19';
+		// $scope.geo_path = '';
+  	navigator.geolocation.getCurrentPosition($scope.handle_geolocation_query, $scope.handle_errors);
+  }
+
+  $scope.handle_geolocation_query = function(position){
+
+		$scope.outlet_lat = position.coords.latitude;
+    $scope.outlet_log = position.coords.longitude;
+
+		$scope.geo_path = "https://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," +
+                    position.coords.longitude + "&zoom=14&size=200x200&scale=2&maptype=roadmap&markers=color:red|" +
+                    position.coords.latitude + ',' + position.coords.longitude + "&key=AIzaSyBj6iTbEOvpPuxn8I4jjuRC2Oq4j6m16FU"  ;
+  }
+
+	$scope.handle_errors = function(error) {
+    switch(error.code) {
+      case error.PERMISSION_DENIED: alert("user did not share geolocation data");
+      break;
+
+      case error.POSITION_UNAVAILABLE: alert("could not detect current position");
+      break;
+
+      case error.TIMEOUT: alert("retrieving position timed out");
+      break;
+
+      default: alert("unknown error");
+      break;
+  	}
+	}
+	$scope.thumbnail = {
+		dataUrl: 'adsfas'
+	};
+	$scope.fileReaderSupported = window.FileReader != null;
+	$scope.photoChanged = function(files){
+		if (files != null) {
+	  	var file = files[0];
+	    	if ($scope.fileReaderSupported && file.type.indexOf('image') > -1) {
+	      	$timeout(function() {
+	        	var fileReader = new FileReader();
+	          fileReader.readAsDataURL(file);
+	          fileReader.onload = function(e) {
+	          	$timeout(function(){
+	 							$scope.thumbnail.dataUrl = e.target.result;
+								console.log($scope.thumbnail.dataUrl);
+	            });
+	          }
+	        });
+	      }
+	  }
+	};
 }]);
 
 function DialogController($scope, $http, $mdDialog, id, action) {
@@ -119,7 +207,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			$scope.brands = response.records[0].brands;
 			$scope.sizes = response.records[1].sizes;
 			$scope.types = response.records[2].types;
-			if (action == 'new') { $scope.productInfo.size_id = response.records[1].sizes[0]['config_id'];}
+			if (action == 'new') { $scope.outletInfo.size_id = response.records[1].sizes[0]['config_id'];}
 
 		})
 	};
@@ -128,7 +216,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 		$http.post('db_controller/surveys/read_one_survey.php', {
 			'id': id
 		}).success(function(data, status, headers, config) {
-			$scope.productInfo = {
+			$scope.outletInfo = {
 				product_id : data[0]['id'],
 				product_code : data[0]['code'],
 				product_name : data[0]['name'],
@@ -154,7 +242,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 		$http.post('db_controller/survyes/read_type_survey.php', {
 			'id' : id
 		}).success(function(data, status, headers, config) {
-			$scope.productInfo.type_id = data[0]['typeId'];
+			$scope.outletInfo.type_id = data[0]['typeId'];
 
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
@@ -172,10 +260,10 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.checkedByInserted = function(id) {
-		if ($scope.productInfo.type_id.length>0) {
+		if ($scope.outletInfo.type_id.length>0) {
 			var checked = false;
-			for(var i = 0; i< $scope.productInfo.type_id.length; i++) {
-				if (id == $scope.productInfo.type_id[i]) {
+			for(var i = 0; i< $scope.outletInfo.type_id.length; i++) {
+				if (id == $scope.outletInfo.type_id[i]) {
 					checked = true;
 				}
 			}
@@ -186,7 +274,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	$scope.buttonAction = action == 'new' ? 'save' : 'update';
 
 	$scope.cancel = function() {
-		$scope.productInfo = {
+		$scope.outletInfo = {
 			product_id: undefined,
 			product_code: undefined,
 			product_name: undefined,
@@ -201,7 +289,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.changeActive = function(value) {
-		$scope.productInfo.product_status = value;
+		$scope.outletInfo.product_status = value;
 	};
 
 	$scope.checkedType = function(item, list) {
@@ -217,21 +305,21 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.create = function() {
-		console.log($scope.productInfo.other_type_checked);
-		if ($scope.productInfo.product_code != undefined && $scope.productInfo.product_name !=
+		console.log($scope.outletInfo.other_type_checked);
+		if ($scope.outletInfo.product_code != undefined && $scope.outletInfo.product_name !=
 			undefined &&
-			$scope.productInfo.product_status != undefined) {
+			$scope.outletInfo.product_status != undefined) {
 			$http.post('db_controller/surveys/create_survey.php', {
-				'code': $scope.productInfo.product_code,
-				'name': $scope.productInfo.product_name,
-				'brandId' : $scope.productInfo.brand_id,
-				'sizeId' :  $scope.productInfo.size_id,
-				'typeId' : $scope.productInfo.type_id,
-				'sizeOtherDetail': $scope.productInfo.other_size_detail,
-				'typeOtherDetail': $scope.productInfo.other_type_detail,
-				'status': $scope.productInfo.product_status
+				'code': $scope.outletInfo.product_code,
+				'name': $scope.outletInfo.product_name,
+				'brandId' : $scope.outletInfo.brand_id,
+				'sizeId' :  $scope.outletInfo.size_id,
+				'typeId' : $scope.outletInfo.type_id,
+				'sizeOtherDetail': $scope.outletInfo.other_size_detail,
+				'typeOtherDetail': $scope.outletInfo.other_type_detail,
+				'status': $scope.outletInfo.product_status
 			}).success(function(data, status, headers, config) {
-				$scope.productInfo = {
+				$scope.outletInfo = {
 					product_id: undefined,
 					product_code: undefined,
 					product_name: undefined,
@@ -255,21 +343,21 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.update = function() {
-		if ($scope.productInfo.product_code != undefined && $scope.productInfo.product_name !=
+		if ($scope.outletInfo.product_code != undefined && $scope.outletInfo.product_name !=
 			undefined &&
-			$scope.productInfo.product_status != undefined) {
+			$scope.outletInfo.product_status != undefined) {
 			$http.post('db_controller/surveys/update_survey.php', {
 				'id': id,
-				'code': $scope.productInfo.product_code,
-				'name': $scope.productInfo.product_name,
-				'brandId' : $scope.productInfo.brand_id,
-				'sizeId' : $scope.productInfo.size_id,
-				'typeId' : $scope.productInfo.type_id,
-				'sizeOtherDetail': $scope.productInfo.other_size_detail,
-				'typeOtherDetail': $scope.productInfo.other_type_detail,
-				'status': $scope.productInfo.product_status
+				'code': $scope.outletInfo.product_code,
+				'name': $scope.outletInfo.product_name,
+				'brandId' : $scope.outletInfo.brand_id,
+				'sizeId' : $scope.outletInfo.size_id,
+				'typeId' : $scope.outletInfo.type_id,
+				'sizeOtherDetail': $scope.outletInfo.other_size_detail,
+				'typeOtherDetail': $scope.outletInfo.other_type_detail,
+				'status': $scope.outletInfo.product_status
 			}).success(function(data, status, headers, config) {
-				$scope.productInfo = {
+				$scope.outletInfo = {
 					product_id: undefined,
 					product_code: undefined,
 					product_name: undefined,
@@ -300,6 +388,40 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 }
+
+MyApp.directive('fileModel', ['$parse', function ($parse) {
+  return {
+     restrict: 'A',
+     link: function(scope, element, attrs) {
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
+
+        element.bind('change', function(){
+           scope.$apply(function(){
+              modelSetter(scope, element[0].files[0]);
+           });
+        });
+     }
+  };
+}]);
+
+MyApp.service('fileUpload', ['$http', function ($http) {
+  this.uploadFileToUrl = function(file, uploadUrl){
+     var fd = new FormData();
+     fd.append('file', file);
+
+     $http.post(uploadUrl, fd, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
+     })
+
+     .success(function(){
+     })
+
+     .error(function(){
+     });
+  }
+}]);
 
 //function SearchProductList(searchWords) {
 //  $http.post("db_controller/product.php?actionType=search&param=" + searchWords).success(function(data) {

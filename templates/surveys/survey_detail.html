@@ -1,73 +1,23 @@
-<md-dialog ng-cloak>
-  <form name="productDetail">
-    <md-toolbar class="md-warn">
-      <div class="md-toolbar-tools">
-          <span class="md-title" flex>{{productInfo.product_name == undefined ? 'Product' : productInfo.product_name}} Detail</span>
-      </div>
-    </md-toolbar>
-    <md-dialog-content>
-      <div class="md-dialog-content" layout="column" flex ng-init="loadConfig()">
-      	<md-input-container class="md-block md-subheader" flex>
-      		<label>Code</label>
-      		<input required ng-model="productInfo.product_code" name="product_code">
-      		<div ng-messages="productDetail.product_code.$error">
-      		<div ng-message="required">This is required.</div></div>
-      	</md-input-container>
-        <md-input-container class="md-block md-subheader" flex>
-          <label>Name</label>
-          <input required ng-model="productInfo.product_name" name="product_name">
-          <div ng-messages="productDetail.product_name.$error">
-          <div ng-message="required">This is required.</div></div>
-        </md-input-container>
-        <md-input-container>
-            <label>Brand</label>
-            <md-select ng-model="productInfo.brand_id" md-selected-text="getSelectedBrand(brand)">
-                <md-option name="brand.config_code"  ng-repeat="brand in brands" value="{{brand.config_id}}">{{brand.config_value}}</md-option>
-            </md-select>
-        </md-input-container>
-        <fieldset class="standard">
-          <legend class="standard">Size</legend>
-          <div layout="column" layout-wrap flex>
-          <md-radio-group layout="row" layout-wrap flex ng-model="productInfo.size_id">
-            <md-radio-button  ng-repeat="size in sizes" name="size.config_code"  ng-value="size.config_id" aria-label="{{size.config_value}}" ng-click="hideOtherRadio(size)">
-              <label>{{size.config_value}}</label>
-            </md-radio-button>
-          </md-radio-group>
-          <md-input-container class="md-block md-subheader" flex ng-show="other_size_radio">
-            <label>If Others: please specify below</label>
-            <input ng-model="productInfo.other_size_detail" name="other_size_detail">
-            <div ng-messages="productDetail.other_size_detail.$error">
-            <div ng-message="required">If you chose Others, this is required.</div></div>
-          </md-input-container>
-        </div>
-        </fieldset>
-        <fieldset class="standard">
-        <legend class="standard">Type</legend>
-          <div layout="column" layout-wrap flex>
-            <div flex-xs layout-wrap layout="row">
-                <md-checkbox aria-label="{{type.config_value}}" ng-checked="checkedByInserted(type.config_id)" name="type.config_code"
-                ng-repeat="type in types" ng-value="type.config_id" ng-click="checkedType(type, productInfo.type_id)">
-                {{type.config_value}}
-                </md-checkbox>
-            </div>
-            <md-input-container class="md-block md-subheader" flex ng-show="other_type_check">
-              <label>If Others: please specify here</label>
-              <input ng-model="productInfo.other_type_detail" name="other_type_detail">
-              <div ng-messages="productDetail.other_type_detail.$error">
-              <div ng-message="required">If you chose Others, this is required.</div></div>
-            </md-input-container>
-          </div>
-        </fieldset>
-        <md-checkbox aria-label="product_active" name="product_status"
-        ng-model="productInfo.product_status" ng-click="changeActive(productInfo.product_status)">
-          Active
-        </md-checkbox>
-      </div>
-    </md-dialog-content>
-    <md-dialog-actions layout="row">
-      <span flex>&nbsp;</span>
-      <md-button ng-click="cancel();">Cancel</md-button>
-      <md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() ">{{buttonAction}}</md-button>
-    </md-dilaog-actions>
-  </form>
-</md-dialog>
+<md-content ng-cloak flex layout-fill ng-cloak="" class="body-color">
+  	<form name="OutletDetail">
+		<md-card md-theme-watch flex>
+      			<md-card-title>
+				<md-card-title-text>
+          				<span class="md-title" flex>{{outletInfo.product_name == undefined ? 'Outlet' : outletInfo.product_name}} Detail</span>
+				</md-card-title-text>
+			</md-card-title>
+			<md-card-content class="container">
+				<div flex layout-padding ng-show="show_layout=='survey_info'" ng-include="'templates/surveys/survey_info.html'"></div>
+				<div flex layout-padding ng-show="show_layout=='survey_question'" ng-include="'templates/surveys/survey_question.html'"></div>
+				<div flex layout-padding ng-show="show_layout=='survey_location'" ng-include="'templates/surveys/survey_location.html'"></div>
+    	</md-card-content>
+			<md-card-actions layout="row">
+				<md-button ng-click="previous(show_layout)" ng-show=show_previous>Previous</md-button>
+				<span flex>&nbsp;</span>
+				<md-button ng-click="DetailClose()" >Cancel</md-button>
+				<md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() " ng-show="show_save">{{buttonAction}}</md-button>
+				<md-button ng-click="next(show_layout)" ng-show="show_next">Next</md-button>
+				</md-card-actions>
+      </md-card>
+	</form>
+</md-content>

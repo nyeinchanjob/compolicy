@@ -1,5 +1,6 @@
-<md-content flex layout-fill ng-controller="ProductCtrl" layout="column" ng-cloak="" class="body-color">
-  <div flex style="margin:10px;" layout="column" ng-init="getAll();">
+<md-content flex layout-fill ng-controller="SurveyCtrl" layout="column" ng-cloak="" class="body-color">
+  <div ng-show="show_detail==true" ng-include="'templates/surveys/survey_detail.html'"></div>
+  <div flex style="margin:10px;" layout="column" ng-init="getAll();" ng-show="show_detail==false">
     <div flex>
       <label class="md-title" layout-padding style="color:red;">Survey List</label>
     </div>
