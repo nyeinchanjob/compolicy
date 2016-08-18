@@ -16,6 +16,7 @@ class Survey {
 	public $status;
 
 	public $cid;
+	public $config_code;
 	public $config_value;
 	public $config_type;
 	public $config_status;
@@ -103,7 +104,7 @@ class Survey {
 
 	function readConfig() {
 		$query = 'SELECT
-						`id`,`config_value`, `config_type`, `config_status`
+						`id`, `config_code`, `config_value`, `config_type`, `config_status`
 			FROM
 			 ' . $this->table_config . '
 			WHERE

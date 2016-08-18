@@ -1,7 +1,7 @@
-<md-content flex layout-fill ng-cloak="">
-	<form name="outletDetail">
-    		<md-content class="container">
-      			<div class="" layout="column" flex ng-init="" >
+<md-content flex layout-fill ng-cloak="" class="body-color">
+	<form name="outletInfo">
+    		<md-content class="container body-color">
+      			<md-card layout-padding layout="column" flex ng-init="" >
 							<!-- #Area -->
       				<md-input-container class="md-block">
       					<label>Area</label>
@@ -48,11 +48,19 @@
 				        </md-input-container>
 							</div>
 							<!-- #Outlet Code -->
-      				<md-input-container class="md-block" >
-      					<label>Outlet Code</label>
-      					<input required class="pyidaungsu" ng-model="outletInfo.outlet_code" name="outlet_code">
-								<div class="hint pyidaungsu">Use only number(0 ~ 9).</div>
-      				</md-input-container>
+							<div layout="row" flex>
+	      				<md-input-container class="md-block" flex>
+	      					<label>Outlet Code</label>
+	      					<input required class="pyidaungsu" ng-model="outletInfo.outlet_code" name="outlet_code">
+									<div class="hint pyidaungsu">Use only number(0 ~ 9).</div>
+	      				</md-input-container>
+								<md-input-container flex>
+				            <label>Outlet Type</label>
+				            <md-select ng-model="outletInfo.outlet_type" md-selected-text="">
+				                <md-option name="type.config_value"  ng-repeat="type in outlet_types" value="{{type.config_id}}">{{type.config_value}}</md-option>
+				            </md-select>
+				        </md-input-container>
+							</div>
 							<!-- #Outlet Name -->
 							<div layout="row" flex>
 								<md-input-container class="md-block" flex>
@@ -85,11 +93,12 @@
       					<input required class="pyidaungsu" ng-model="outletInfo.outlet_phone" name="outlet_phone">
 								<div class="hint pyidaungsu">Use only number(0 ~ 9).</div>
       				</md-input-container>
+
 							<md-checkbox aria-label="product_active" name="product_status"
 			        ng-model="productInfo.product_status" ng-click="changeActive(productInfo.product_status)">
 			          Active
 			        </md-checkbox>
-      </div>
+      </md-card>
     </md-content>
   </form>
 </md-content>

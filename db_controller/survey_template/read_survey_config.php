@@ -32,6 +32,7 @@
 
                 $data .= '{';
                     $data .= '"config_id":"' . $id . '",';
+                    $data .= '"config_code":"' . $config_code . '",';
                     $data .= '"config_value":"' . $config_value . '",';
                     $data .= '"config_type":"' . $config_type . '",';
                     $data .= '"config_status":"' . $config_status . '"';

@@ -26,21 +26,11 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 	$scope.checkedByInserted = false;
 	$scope.other_type_check = false;
 	$scope.cbselected = [];
+	$scope.detailTitle = '၏ အချက်အလက်များ';
+	$scope.geo_path = 'img/maps.png';
 
 	$scope.showProductDetail = function() {
 		$scope.show_detail = true;
-		// $mdDialog.show({
-		// 	controller: DialogController,
-		// 	templateUrl: 'templates/surveys/survey_detail.html',
-		// 	locals: {
-		// 		id: undefined,
-		// 		action: 'new'
-		// 	},
-		// 	scope: $scope,
-		// 	preserveScope: true,
-		// 	parent: angular.element(document.body),
-		// 	clickOutsideToClose: false,
-		// });
 	};
 
 	$scope.getAll = function() {
@@ -118,11 +108,13 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 			$scope.show_layout = "survey_question";
 			$scope.show_previous = true;
 			$scope.show_save = false;
+			$scope.detailTitle = '၏ အမေးအဖြေများ ';
 		}
 		if (layout == "survey_question") {
 			$scope.show_layout = "survey_location";
 			$scope.show_save = true;
 			$scope.show_next = false;
+			$scope.detailTitle = '၏ တည်နေရာ ';
 		}
 	}
 
@@ -131,11 +123,13 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 			$scope.show_layout = "survey_question";
 			$scope.show_next = true;
 			$scope.show_save = false;
+			$scope.detailTitle = '၏ အမေးအဖြေများ ';
 		}
 		if (layout == "survey_question") {
 			$scope.show_layout = "survey_info";
 			$scope.show_save = false;
 			$scope.show_previous = false;
+			$scope.detailTitle = '၏ အချက်အလက်များ ';
 		}
 	}
 
@@ -175,7 +169,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
   	}
 	}
 	$scope.thumbnail = {
-		dataUrl: 'adsfas'
+		dataUrl: 'img/outlet.png'
 	};
 	$scope.fileReaderSupported = window.FileReader != null;
 	$scope.photoChanged = function(files){
@@ -188,29 +182,30 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 	          fileReader.onload = function(e) {
 	          	$timeout(function(){
 	 							$scope.thumbnail.dataUrl = e.target.result;
-								console.log($scope.thumbnail.dataUrl);
 	            });
 	          }
 	        });
 	      }
 	  }
 	};
-}]);
-
-function DialogController($scope, $http, $mdDialog, id, action) {
 
 	$scope.loadConfig = function() {
-		$scope.cfgType = ['brand', 'size', 'type'];
+		console.log('Yae');
+		$scope.cfgType = ['question', 'outlet_type'];
 		$http.post('db_controller/surveys/read_survey_config.php', {
 			'cType': $scope.cfgType
 		}).success(function(response) {
-			$scope.brands = response.records[0].brands;
-			$scope.sizes = response.records[1].sizes;
-			$scope.types = response.records[2].types;
-			if (action == 'new') { $scope.outletInfo.size_id = response.records[1].sizes[0]['config_id'];}
+			$scope.questions = response.records[0].questions;
+			$scope.outlet_types = response.records[1].outlet_types;
+			// if (action == 'new') { $scope.outletInfo.size_id = response.records[1].sizes[0]['config_id'];}
 
 		})
 	};
+
+
+}]);
+
+function DialogController($scope, $http, $mdDialog, id, action) {
 
 	if (id != undefined) {
 		$http.post('db_controller/surveys/read_one_survey.php', {

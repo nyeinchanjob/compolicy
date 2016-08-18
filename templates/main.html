@@ -62,7 +62,7 @@
     </md-sidenav>
       <div flex layout-fill ng-include="'templates/login/login.html'"
         ng-show="!$root.loginCorrect"  layout-align="center start" class="body-color"></div>
-      <md-content class="container body-content body-color" md-scroll-y flex ng-show="loginCorrect">
+      <md-content class="container body-content body-color" layout-md md-scroll-y flex ng-show="loginCorrect">
         <div flex ng-show="show_layout=='survey_list'" ng-include="'templates/surveys/survey_list.html'"></div>
         <div flex ng-show="show_layout=='report_list'" ng-include="'templates/reports/report_list.html'"></div>
         <div flex ng-show="show_layout=='config_list'" ng-include="'templates/configs/config_list.html'"></div>
