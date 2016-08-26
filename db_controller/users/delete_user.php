@@ -7,20 +7,19 @@
 		echo 'Unable to include database file.';
 	}
 
-	if(file_exists("survey.php") && include_once("survey.php") ){
-		$survey = new Survey($db);
+	if(file_exists("user.php") && include_once("user.php") ){
+		$user = new User($db);
 	} else {
-		echo 'Unable to include survey file.';
+		echo 'Unable to include user file.';
 	}
 
 	$data = json_decode(file_get_contents('php://input'));
 
-	$survey->id = $data->id;
-  $survey->readType();
+	$user->id = $data->id;
 
-  $survey_arr[] = array(
-		'typeId' => $survey->typeId
-  );
-
-  print_r(json_encode($survey_arr));
+	if ($user->delete()) {
+		echo 'User was deleted.';
+	} else {
+		echo 'Unable to delete user';
+	}
 ?>

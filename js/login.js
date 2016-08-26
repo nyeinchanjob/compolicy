@@ -8,17 +8,16 @@ MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes', '$mdTo
   Scopes.store('loginScopes', $scope);
   $rootScope.loginCorrect = false;
   $scope.login = function() {
-    $http.post('db_controller/login/check_login.php', {
+    $http.post('db_controller/users/logtoin.php', {
       'username' : $scope.username,
       'password' : $scope.password
     }).success(function(data, status, headers, config) {
       if(Object.keys(data).length>0) {
         $scope.userInfo = {
-          user_id : data['user_id'],
-          first_name : data['firstname'],
-          last_name : data['lastname'],
-          role_id : data['role_id'],
-          rolename : data['rolename']
+          id : data['id'],
+          name : data['name'],
+          department : data['department'],
+          position  : data['position']
         };
         $rootScope.loginCorrect = true;
       } else {
@@ -36,7 +35,7 @@ MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes', '$mdTo
     }).error(function(data, status, headers, config) {
       $mdToast.show(
         $mdToast.simple()
-          .textContent('Username and Password are incorrect. Please try again.')
+          .textContent('Login has found error. Please contact your IT Administrator.')
           .position('top right' )
           .hideDelay(2000)
         );

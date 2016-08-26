@@ -190,7 +190,6 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 	};
 
 	$scope.loadConfig = function() {
-		console.log('Yae');
 		$scope.cfgType = ['question', 'outlet_type'];
 		$http.post('db_controller/surveys/read_survey_config.php', {
 			'cType': $scope.cfgType

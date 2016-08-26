@@ -1,10 +1,70 @@
-<md-toolbar class="md-table-toolbar md-default">
-  <div class="md-toolbar-tools">
-    <span>Nutrition</span>
-    <span flex></span>
-  </div>
-</md-toolbar>
-<div layout-margin>
-  <dtable options="options" rows="data" class="material dt">
-  </dtable>
-</div>
+<md-dialog ng-cloak>
+  <form name="userDetail">
+    <md-toolbar class="md-warn">
+      <div class="md-toolbar-tools">
+          <span class="md-title" flex>{{userInfo.name == undefined ? 'User' : userInfo.name}} Detail</span>
+      </div>
+    </md-toolbar>
+    <md-dialog-content >
+      <div class="md-dialog-content" layout="column" flex ng-init="loadConfig()">
+	<div layout="row" layout-fill>
+	        <md-input-container class="md-block md-subheader" flex>
+        		<label>Name</label>
+          		<input required ng-model="userInfo.name" name="name">
+          		<div ng-messages="userDetail.login_name.$error">
+          		<div ng-message="required">This is required.</div></div>
+        	</md-input-container>
+        	<md-input-container class="md-block md-subheader" flex>
+          		<label>Department</label>
+          		<input ng-model="userInfo.department" name="department">
+        	</md-input-container>
+	</div>
+	<div layout="row" layout-fill>
+		<md-input-container class="md-block md-subheader" flex>
+        		<label>Position</label>
+                	<input ng-model="userInfo.position" name="position">
+        	</md-input-container>
+  		<md-input-container class="md-block md-subheader" flex>
+          		<label>Role</label>
+                  	<md-select required ng-model="userInfo.role_id">
+				<md-option name="role.id" ng-repeat="role in roles" value="{{role.id}}">
+					{{role.role_name}}
+				</md-option>
+			</md-select>
+			<div ng-messages="userDetail.role_id.$error">
+			<div ng-message="required">This is required</div></div>
+          	</md-input-container>
+	</div>
+ 	<md-input-container class="md-block md-subheader" flex>
+  		<label>Username</label>
+  		<input required ng-model="userInfo.username" name="username">
+  		<div ng-messages="userDetail.username.$error">
+  		<div ng-message="required">This is required.</div></div>
+	</md-input-container>
+	<div layout="row" layout-fill>
+  		<md-input-container class="md-block md-subheader" flex>
+  			<label>Password</label>
+  			<input required type ="password" ng-model="userInfo.password" name="password">
+  			<div ng-messages="userDetail.password.$error">
+  			<div ng-message="required">This is required.</div></div>
+		</md-input-container>
+  		<md-input-container class="md-block md-subheader" flex>
+  			<label>Confirm Password</label>
+  			<input required ng-model="userInfo.confirmPassword" name="confirmPassword">
+  			<div ng-messages="userDetail.confirmPassword.$error">
+  			<div ng-message="required">This is required.</div></div>
+		</md-input-container>
+	</div>
+        <md-checkbox aria-label="user_active" name="user_status"
+        ng-model="userInfo.user_status" ng-click="changeActive(userInfo.user_status)">
+          Active
+        </md-checkbox>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="end center">
+      <!--<span flex>&nbsp;</span>-->
+      <md-button ng-click="cancel();">Cancel</md-button>
+      <md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() ">{{buttonAction}}</md-button>
+    </md-dilaog-actions>
+  </form>
+</md-dialog>

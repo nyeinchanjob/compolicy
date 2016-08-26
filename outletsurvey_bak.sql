@@ -28,7 +28,7 @@ CREATE TABLE `config` (
   `config_type` varchar(254) DEFAULT NULL,
   `config_status` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `config` (
 
 LOCK TABLES `config` WRITE;
 /*!40000 ALTER TABLE `config` DISABLE KEYS */;
-INSERT INTO `config` VALUES (1,'Survey','menu',1),(2,'Report','menu',1),(3,'Access','menu',1),(4,'User','menu',1),(5,'Set Up','menu',1),(6,'View','control',1),(7,'Create','control',1),(8,'Read','control',1),(9,'Update','control',1),(10,'Delete','control',1);
+INSERT INTO `config` VALUES (1,'Survey','menu',1),(2,'Report','menu',1),(3,'Access','menu',1),(4,'User','menu',1),(5,'Set Up','menu',1),(6,'View','control',1),(7,'Create','control',1),(8,'Read','control',1),(9,'Update','control',1),(10,'Delete','control',1),(11,'CSD (Non-Alcohol)','question',1),(12,'Soda (Non-Alcohol)','question',1),(13,'FF Drink (Non-Alcohol)','question',1),(14,'FF Powder (Non-Alcohol)','question',1),(15,'ASD (Non-Alcohol)','question',1),(16,'Isotonic Drink (Non-Alcohol)','question',1),(17,'Energy Drink (Non-Alcohol)','question',1),(18,'Carbonated Energy Drink (Non-alcohol)','question',1),(19,'Drinking Water (Non-Alcohol)','question',1),(20,'Instant Coffee (Non-Alcohol)','question',1),(21,'Computer Shop','outlet_type',1),(22,'Cafe','outlet_type',1);
 /*!40000 ALTER TABLE `config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,4 +156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-16  8:36:42
+-- Dump completed on 2016-08-19 10:05:58

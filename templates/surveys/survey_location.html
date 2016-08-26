@@ -1,6 +1,6 @@
-<md-content flex layout-fill ng-cloak="" class="body-color">
+<md-content flex layout-fill ng-cloak="" class="dark-body-color">
   <form name="outletLocation">
-    <div layout="row" flex class="body-color">
+    <div layout="row" flex class="dark-body-color">
       <md-card layout="column" flex layout-fill>
         <md-card-title>
           <md-card-title-text>
@@ -27,9 +27,13 @@
         </md-card-title>
         <md-content layout="column">
           <img layout-padding ng-show="thumbnail.dataUrl != null" ng-src="{{ thumbnail.dataUrl }}" class="md-card-image" alt="outlet_image"/>
+          <md-divider></md-divider>
+
         </md-content>
         <md-card-action layout="row" layout-align="start center">
-          <input type="file" name="file" onchange="angular.element(this).scope().photoChanged(this.files)" />
+          <md-input-container flex>
+            <input type="file" name="file" onchange="angular.element(this).scope().photoChanged(this.files)" />
+          </md-input-container>
         </md-card-action>
       </md-card>
     </div>
