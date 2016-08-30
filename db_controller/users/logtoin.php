@@ -13,22 +13,22 @@
 		echo 'Unable to include user file.';
 	}
 
-	//$data = json_decode(file_get_contents('php://input'));
+	$data = json_decode(file_get_contents('php://input'));
 
-	//$user->username = $data->username;
-	//$user->password = $data->password;
+	$user->username = $data->username;
+	$user->password = $data->password;
 	
-	print_r('Yae');	
-	//$stmt = $user->login();
+	$user->login();
+	
+	$user_arr = array(
+		'id' => $user->id,
+		'name' => $user->name,
+		'department' => $user->department,
+		'position' => $user->position,
+		'role_id' => $user->role_id
+	);
 
-	//$user_arr = array();
-	//if (($stmt->rowCount())>0) {
-		
-	//	$user_arr['id'] = $user->id;
-	//	$user_arr['name'] = $user->name;
-	//	$user_arr['department'] = $user->department;
-	//	$user_arr['position'] = $user->position;
-	//}
-
-	//print_r(json_encode($user_arr));
+	print_r(json_encode($user_arr));
 ?>
+
+

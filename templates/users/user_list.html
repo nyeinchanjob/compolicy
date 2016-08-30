@@ -1,5 +1,5 @@
 <md-content flex layout-fill ng-controller="UserCtrl" layout="column" ng-cloak="" class="body-color">
-	<div flex style="margin:10px;" layout="column" ng-init="">
+	<div flex style="margin:10px;" layout="column" ng-init="getAll();">
     		<div flex>
       			<label class="md-title" layout-padding style="color:red;">User List</label>
     		</div>
@@ -14,9 +14,9 @@
       			<md-button class="md-raised" ng-show="cbValue.cbselect_edit" ng-click="delete()">Delete</md-button>
     		</div>
     		<md-content flex class="body-color rounded-block" layout="column">
-			<div layout-fill class="dark-body-color" ng-repeat="type in types">
-				<span flex class="md-title">{{type.type}}</span>
-      				<div ng-repeat="item in items">
+			<md-card class="dark-body-color" ng-repeat="type in items">
+				<span flex class="md-title md-primary md-padding">{{type.type | uppercase}}</span>
+      				<div ng-repeat="item in type.data ">
         				<md-card layout="row" layout-align="start center">
           					<md-checkbox class="margin-fifteen" aria-label="select_edit" ng-checked="exists(item.id, cbselected)" ng-click="checkedToEdit(item.id, cbselected);"></md-checkbox>
           					<md-button layout-fill layout-align="center center" ng-value="item.id" ng-model="item" ng-click="readOne(item.id)">
@@ -27,7 +27,7 @@
           					</md-button>
         				</md-card>
       				</div>
-			</div>
+			</md-card>
     		</md-content>
   	</div>
 </md-content>

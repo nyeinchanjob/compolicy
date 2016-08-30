@@ -19,6 +19,8 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav) {
     $scope.checked_index = [];
     $scope.checked_show = false;
     $scope.bundle_deals = [];
+    $rootScope.user_name = '';
+	//$scope.user_name = $rootScope.user_name;
     $rootScope.loginCorrect = false;
     $scope.show_layout='survey_list';
 

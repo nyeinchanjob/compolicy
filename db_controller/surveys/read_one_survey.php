@@ -16,18 +16,20 @@
 	$data = json_decode(file_get_contents('php://input'));
 
 	$survey->id = $data->id;
-  $survey->readOne();
+  	$survey->readOne();
 
-  $survey_arr[] = array(
-    'id' => $survey->id,
-    'code' => $survey->code,
-    'name' => $survey->name,
-		'brandId' => $survey->brandId,
-		'sizeId' => $survey->sizeId,
-		'otherSizeDetail' => $survey->otherSizeDetail,
-		'otherTypeDetail' => $survey->otherTypeDetail,
-    'status' => $survey->status
+  	$survey_arr[] = array(
+    		'id' => $survey->id,
+    		'area' => $survey->area,
+    		'city_mm' => $survey->city_mm, 'city_en' => $survey->city_en,
+		'township_mm' => $survey->township_mm, 'township_en' => $survey->township_en,
+		'ward_mm' => $survey->ward_mm, 'ward_en' => $survey->ward_en,
+		'phone1' => $survey->phone1, 'phone2' => $survey->phone2, 'phone3' => $survey->phone3,
+		'longitude' => $survey->longitude, 'latitude' => $survey->latitude,
+		`image_path_1` => $survey->image_path_1, 'image_path_2' => $survey->image_path_2, 'image_path_3' => $survey->image_path_3,
+		'user_id' => $survey->user_id,
+		'status' => $survey->status
   );
 
-  print_r(json_encode($survey_arr));
+ 	print_r(json_encode($survey_arr));
 ?>

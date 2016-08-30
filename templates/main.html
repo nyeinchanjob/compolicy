@@ -23,8 +23,9 @@
     </md-content>
     <span flex="5">&nbsp;</span>
     <div layout="row" layout-align="center center" ng-hide="isOpenLeft()">
-      <md-button class="md-icon-button" ng-show="true" aria-label="delete" ng-click="logout()">
+      <md-button class="" ng-show="true" aria-label="delete" ng-click="logout()">
         <md-icon md-svg-icon="img/icons/lock_white_24px.svg"></md-icon>
+	<span>{{user_name}}</span>
       </md-button>
     </div>
   </md-toolbar>

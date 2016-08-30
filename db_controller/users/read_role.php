@@ -9,13 +9,15 @@ header("Content-Type: application/json; charset=UTF-8");
 		echo 'Unable to include database file.';
 	}
 
-	if(file_exists("survey.php") && include_once("survey.php") ){
-		$survey = new Survey($db);
+	if(file_exists("user.php") && include_once("user.php") ){
+		$user = new User($db);
 	} else {
-		echo 'Unable to include survey file.';
+		echo 'Unable to include user file.';
 	}
-
-	$stmt = $survey->readAll();
+	$para = json_decode(file_get_contents('php://input'));
+	
+	$user->issysadmin = $para->issysadmin;
+	$stmt = $user->readAllRole();
 	$num = $stmt->rowCount();
 
 	if($num>0) {
@@ -25,12 +27,8 @@ header("Content-Type: application/json; charset=UTF-8");
 			extract($row);
 			$data .= '{';
 				$data .= '"id":"' . $id . '",';
-				$data .= '"area":"' . $area . '",';
-				$data .= '"outlet_mm":"' . html_entity_decode($outlet_mm) . '",';
-				$data .= '"township_mm":"' . html_entity_decode($township_mm) . '",';
-				$data .= '"city_mm":"' . html_entity_decode($city_mm) . '"';
-				//$status = $survey_status == '1' ? 'Active' : 'Inactive';
-				$data .= '"survey_status":"' . $survey_status . '"';
+				$data .= '"role_name":"' . html_entity_decode($role_name) . '",';
+				$data .= '"role_status":"' . $role_status . '"';
 			$data .= '}';
 
 			$data .= $x < $num ? ',' : '';

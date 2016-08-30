@@ -17,8 +17,10 @@ MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes', '$mdTo
           id : data['id'],
           name : data['name'],
           department : data['department'],
-          position  : data['position']
+          position  : data['position'],
+		role_id : data['role_id']
         };
+	$rootScope.user_name = $scope.userInfo.name;
         $rootScope.loginCorrect = true;
       } else {
         $mdToast.show(

@@ -1,41 +1,77 @@
 <md-content flex layout-fill ng-cloak="" class="dark-body-color">
-  <form name="outletLocation">
-    <div layout="row" flex class="dark-body-color">
-      <md-card layout="column" flex layout-fill>
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Outlet location</span>
-          </md-card-title-text>
-        </md-card-title>
-        <md-content layout="column">
-          <img layout-padding ng-src="{{geo_path}}" class="md-card-image" alt="outlet_location">
-          <div layout="row" flex layout-padding layout-warp>
-            <span flex>Latitude : {{outlet_lat}}</span>
-            <span flex>Longitude : {{outlet_log}}</span>
-          </div>
-        </md-content>
-        <md-card-action layout="row" layout-align="end center">
-          <md-button ng-click="initiate_geolocation();">Get Location</md-button>
-        </md-card-action>
-      </md-card>
-      <md-divider></md-divider>
-      <md-card layout="column" flex layout-fill>
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Outlet Photo</span>
-          </md-card-title-text>
-        </md-card-title>
-        <md-content layout="column">
-          <img layout-padding ng-show="thumbnail.dataUrl != null" ng-src="{{ thumbnail.dataUrl }}" class="md-card-image" alt="outlet_image"/>
-          <md-divider></md-divider>
+	<form name="outletInfo">
+    		<div flex class="dark-body-color">
+      			<md-card layout="column" flex layout-fill>
+        			<md-card-title>
+          				<md-card-title-text>
+            					<span class="md-headline">Outlet location</span>
+          				</md-card-title-text>
+        			</md-card-title>
+        			<md-content layout="column">
+          				<img layout-padding ng-src="{{geo_path}}" class="md-card-image" alt="outlet_location">
+          				<div layout="row" flex layout-padding layout-warp>
+            					<span flex>Latitude : {{outletInfo.latitude}}</span>
+            					<span flex>Longitude : {{outletInfo.longitude}}</span>
+          				</div>
+        			</md-content>
+        			<md-card-action layout="row" layout-align="end center">
+          				<md-button ng-click="initiate_geolocation();">Get Location</md-button>
+        			</md-card-action>
+      			</md-card>
+      			<md-divider></md-divider>
+			<div layout="row">
+      				<md-card layout="column" flex layout-fill>
+        				<md-card-title>
+          					<md-card-title-text>
+            						<span class="md-headline">Outlet Photo</span>
+          					</md-card-title-text>
+        				</md-card-title>
+        				<md-content layout="column">
+          					<img layout-padding ng-show="thumbnail.dataUrl1 != null" ng-src="{{ thumbnail.dataUrl1 }}" class="md-card-image" alt="outlet_image1"/>
+          					<md-divider></md-divider>
 
-        </md-content>
-        <md-card-action layout="row" layout-align="start center">
-          <md-input-container flex>
-            <input type="file" name="file" onchange="angular.element(this).scope().photoChanged(this.files)" />
-          </md-input-container>
-        </md-card-action>
-      </md-card>
-    </div>
-  </form>
+        				</md-content>
+        				<md-card-action layout="row" layout-align="start center">
+          					<md-input-container flex>
+            						<input aria-label="image1" type="file" name="file1" onchange="angular.element(this).scope().photoChanged(this.files)" />
+          					</md-input-container>
+        				</md-card-action>
+      				</md-card>
+		<md-card layout="column" flex layout-fill>
+			<md-card-title>
+				<md-card-title-text>
+					<span class="md-headline">Outlet Photo</span>
+				</md-card-title-text>
+			</md-card-title>
+			<md-content layout="column">
+				<img layout-padding ng-show="thumbnail.dataUrl2 != null" ng-src="{{ thumbnail.dataUrl2 }}" class="md-card-image" alt="outlet_image2"/>
+				<md-divider></md-divider>
+                                                                                                                                                                    
+			</md-content>
+			<md-card-action layout="row" layout-align="start center">
+				<md-input-container flex>
+					<input aria-label="image2" type="file" name="file2" onchange="angular.element(this).scope().photoChanged(this.files)" />
+				</md-input-container>
+			</md-card-action>
+		</md-card>
+		<md-card layout="column" flex layout-fill>
+			<md-card-title>
+				<md-card-title-text>
+					<span class="md-headline">Outlet Photo</span>
+				</md-card-title-text>
+			</md-card-title>
+			<md-content layout="column">
+				<img layout-padding ng-show="thumbnail.dataUrl3 != null" ng-src="{{ thumbnail.dataUrl3 }}" class="md-card-image" alt="outlet_image3"/>
+				<md-divider></md-divider>
+                                                                                                                                                                    
+			</md-content>
+			<md-card-action layout="row" layout-align="start center">
+				<md-input-container flex>
+					<input aria-label="image3" type="file" name="file3" onchange="angular.element(this).scope().photoChanged(this.files)" />
+				</md-input-container>
+			</md-card-action>
+		</md-card>
+			</div>
+    		</div>
+  	</form>
 </md-content>

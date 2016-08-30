@@ -15,7 +15,7 @@
 
 	$data = json_decode(file_get_contents('php://input'));
 
-  $survey->id = $data->id;
+  	$survey->id = $data->id;
 
 	if ($survey->delete()) {
 		echo 'Survey was deleted.';

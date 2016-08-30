@@ -32,11 +32,12 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', functi
 	};
 
 	$scope.getAll = function() {
-		$http.post('db_controller/users/read_user.php').success(function(
+		$http.get('db_controller/users/read_user.php').success(function(
 			response) {
 			$scope.items = response.records;
 		});
 	};
+
 
 
 	$scope.readOne = function(id) {
@@ -309,8 +310,7 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 	$scope.getAll = function() {
 		$http.get('db_controller/users/read_user.php').success(function(
 			response) {
-			$scope.types = resopnse.records[0]['type'];
-			$scope.items = response.records[0]['data'];
+			$scope.items = response.records
 		});
 	};
 

@@ -1,5 +1,5 @@
 <?php
-	if(file_exists('../../user/database.php') && include_once('../../user/database.php') ){
+	if(file_exists('../../config/database.php') && include_once('../../config/database.php') ){
 
 		$database = new Database();
 		$db = $database->getConn();

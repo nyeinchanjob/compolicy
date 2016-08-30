@@ -25,7 +25,7 @@
 			'position' => $user->position,
 			'role_id' => $user->role_id,
 			'username' => $user->username,
-			'password' => $user->password
+			'password' => $user->password,
 			'user_status' => $user->user_status
   		);
 

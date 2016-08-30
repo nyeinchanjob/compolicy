@@ -16,11 +16,7 @@
 	$data = json_decode(file_get_contents('php://input'));
 
 	$survey->id = $data->id;
-  $survey->readType();
+  	$survey->readQuestion();
 
-  $survey_arr[] = array(
-		'typeId' => $survey->typeId
-  );
-
-  print_r(json_encode($survey_arr));
+  	print_r(json_encode($survey->questions));
 ?>

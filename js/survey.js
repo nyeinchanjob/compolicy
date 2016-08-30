@@ -4,7 +4,7 @@ var MyApp = angular.module('MyApp');
 MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$timeout', function(
 	$scope, $mdDialog, $http, Upload, $timeout) {
 	$scope.cbValue = {};
-	$scope.cbValue.cbselect_all = false;
+	$scope.cbValue.cbselect_all = false
 	$scope.cbValue.cbselect_edit = false;
 	$scope.show_detail = false;
 	$scope.show_layout='survey_info';
@@ -12,16 +12,21 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 	$scope.show_previous = false;
 	$scope.show_next = true;
 	$scope.outletInfo = {
-		product_id: undefined,
-		product_code: undefined,
-		product_name: undefined,
-		brand_id : undefined,
-		size_id : undefined,
-		other_size_detail : undefined,
-		type_id : [],
-		other_type_detail : undefined,
-		product_status: true
+		id : undefined,
+		area : undefined,
+		city_mm : undefined, city_en : undefined,
+		township_mm :undefined, township_en : undefined,
+		ward_mm : undefined, ward_en : undefined,
+		outlet_type : undefined,
+		outlet_mm : undefined, outlet_en : undefined,
+		owner_mm : undefined, owner_en : undefined,
+		phone1 :undefined, phone2 : undefined, phone3 : undefined,
+		survey_status :undefined,
+		longitude : undefined, latitude : undefined,
+		image_path_1 : undefined, image_path_2 : undefined, image_path_3 : undefined,
+		user_id : undefined
 	}
+	$scope.answers = [];
 	$scope.other_size_radio = false;
 	$scope.checkedByInserted = false;
 	$scope.other_type_check = false;
@@ -137,56 +142,61 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 		$scope.show_detail = false;
 	}
 	$scope.initiate_geolocation = function() {
-		// $scope.outlet_lat = '16.86';
-		// $scope.outlet_log = '96.19';
-		// $scope.geo_path = '';
-  	navigator.geolocation.getCurrentPosition($scope.handle_geolocation_query, $scope.handle_errors);
-  }
+  		navigator.geolocation.getCurrentPosition($scope.handle_geolocation_query, $scope.handle_errors);
+  	}
 
-  $scope.handle_geolocation_query = function(position){
-
-		$scope.outlet_lat = position.coords.latitude;
-    $scope.outlet_log = position.coords.longitude;
-
+  	$scope.handle_geolocation_query = function(position) {
+		
+		$scope.outletInfo.latitude = position.coords.latitude;
+    		$scope.outletInfo.longitude = position.coords.longitude;
+		
 		$scope.geo_path = "https://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," +
                     position.coords.longitude + "&zoom=14&size=200x200&scale=2&maptype=roadmap&markers=color:red|" +
                     position.coords.latitude + ',' + position.coords.longitude + "&key=AIzaSyBj6iTbEOvpPuxn8I4jjuRC2Oq4j6m16FU"  ;
-  }
+	}
 
 	$scope.handle_errors = function(error) {
-    switch(error.code) {
-      case error.PERMISSION_DENIED: alert("user did not share geolocation data");
-      break;
+    		switch(error.code) {
+      			case error.PERMISSION_DENIED: 
+				alert("user did not share geolocation data");
+      				break;
 
-      case error.POSITION_UNAVAILABLE: alert("could not detect current position");
-      break;
+      			case error.POSITION_UNAVAILABLE: 
+				alert("could not detect current position");
+      				break;
 
-      case error.TIMEOUT: alert("retrieving position timed out");
-      break;
+      			case error.TIMEOUT: 
+				alert("retrieving position timed out");
+      				break;
 
-      default: alert("unknown error");
-      break;
-  	}
+      			default: 
+				alert("unknown error");
+      				break;
+  		}
 	}
+	
 	$scope.thumbnail = {
 		dataUrl: 'img/outlet.png'
 	};
+	
 	$scope.fileReaderSupported = window.FileReader != null;
+	
 	$scope.photoChanged = function(files){
 		if (files != null) {
-	  	var file = files[0];
-	    	if ($scope.fileReaderSupported && file.type.indexOf('image') > -1) {
-	      	$timeout(function() {
-	        	var fileReader = new FileReader();
-	          fileReader.readAsDataURL(file);
-	          fileReader.onload = function(e) {
-	          	$timeout(function(){
-	 							$scope.thumbnail.dataUrl = e.target.result;
-	            });
-	          }
-	        });
-	      }
-	  }
+	  		var file = files[0];
+	    		if ($scope.fileReaderSupported && file.type.indexOf('image') > -1) {
+	      			$timeout(function() {
+	        			var fileReader = new FileReader();
+	          			fileReader.readAsDataURL(file);
+	          			fileReader.onload = function(e) {
+	          				$timeout(function(){
+	 						$scope.thumbnail.dataUrl = e.target.result;
+							console.log(files);
+	            				});
+	          			}
+	        		});
+	      		}
+	  	}
 	};
 
 	$scope.loadConfig = function() {
@@ -416,28 +426,3 @@ MyApp.service('fileUpload', ['$http', function ($http) {
      });
   }
 }]);
-
-//function SearchProductList(searchWords) {
-//  $http.post("db_controller/product.php?actionType=search&param=" + searchWords).success(function(data) {
-//    console.log(data);
-//  });
-//}
-
-
-// a = {'records': [
-// 		{'brand':[
-// 			{'id':1, 'config_code': 'CCL', 'config_value': 'Coca-Cola', 'config_type': 'brand', 'config_status':1},
-// 			{'id':2, 'config_code': 'MAX', 'config_value': 'Max', 'config_type': 'brand', 'config_status':1},
-// 			{'id':3, 'config_code': 'BRN', 'config_value': 'Burn', 'config_type': 'brand', 'config_status':1}
-// 		]},
-// 		{'size':[
-// 			{'id':4, 'config_code': '1L', 'config_value': '1 Liter', 'config_type': 'size', 'config_status':1},
-// 			{'id':5, 'config_code': '1_5L', 'config_value': '1.5 Liter', 'config_type': 'size', 'config_status':1},
-// 			{'id':6, 'config_code': '330ML', 'config_value': '330 ML', 'config_type': 'size', 'config_status':1}
-// 		]},
-// 		{'type':[
-// 			{'id':7, 'config_code': 'PET', 'config_value': 'PET', 'config_type': 'type', 'config_status':1},
-// 			{'id':8, 'config_code': 'RGB', 'config_value': 'RGB', 'config_type': 'type', 'config_status':1},
-// 			{'id':9, 'config_code': 'CAN', 'config_value': 'CAN', 'config_type': 'type', 'config_status':1}
-// 		]}
-// 	]}

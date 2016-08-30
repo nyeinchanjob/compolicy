@@ -3,6 +3,7 @@ class User {
     	private $conn;
     	private $table_name = 'user';
         private $table_role = 'role';
+	private $sysadmin = 'sysadmin';
 
     	public $id;
     	public $name;
@@ -12,7 +13,8 @@ class User {
 	public $username;
 	public $password;
 	public $user_status;
-
+	
+	public $issysadmin;
 
 	public function __construct($db) {
         	$this->conn = $db;
@@ -20,9 +22,11 @@ class User {
 
     	function checkLoginName() {
         	$query = 'SELECT
-                    		`id`, `name`, `department`, `position`, `role_id`, `username`, `password`, `user_status`  FROM
-                    		`' . $this->table_name . '`
-                    		WHERE `username` = :username';
+                    		`id`, `name`, `department`, `position`, `role_id`, `username`, `password`, `user_status`  
+			  FROM 
+				`' . $this->table_name . '`
+                    	  WHERE 
+				`username` = :username;';
         	$stmt = $this->conn->prepare($query);
         	$stmt->bindParam(':username', $this->username, PDO::PARAM_STR);
         	$stmt->execute();
@@ -32,9 +36,10 @@ class User {
 	function checkUserName() {
 		$query = 'SELECT
 				 `id`, `name`, `department`, `positoin`, `role_id`, `username`, `password`, `user_status`
-			  FROM `' . $this->table_name; . '`
+			  FROM 
+				`' . $this->table_name . '`
 			  WHERE
-				`name` = :name';
+				`name` = :name;';
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
 		$stmt->execute();
@@ -44,23 +49,29 @@ class User {
 	function login() {
 		$query = 'SELECT
 				 `id`, `name`, `department`, `position`, `role_id`, `username`, `password`, `user_status`
-			  FROM `' . $this->table_name . '`
+			  FROM 
+				`' . $this->table_name . '`
 			  WHERE
 				`username` = :username AND
 				`password` = :password AND
-				`user_status` = 1 AND `delete_status` = 0
-			';
+				`user_status` = 1 AND `delete_status` = 0;';
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':username', $this->username, PDO::PARAM_STR);
 		$stmt->bindParam(':password', $this->password, PDO::PARAM_STR);
 		if ($stmt->execute()) {
-			print_r('Yae');
-			return $stmt;
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+			$this->id = $row['id'];
+			$this->name = $row['name'];
+			$this->department = $row['department'];
+			$this->position = $row["position"];
+			$this->role_id = $row['role_id'];
+			$this->username = $row['username'];
+			$this->password = $row['password'];
+			$this->status = $row['user_status'];
 		} else {
 			echo '<pre> <br/> Login Error<br/>';
 				print_r($stmt->errorInfo());
 			echo '</pre>';
-			return ;
 		}
 	}
 
@@ -112,11 +123,21 @@ class User {
     	function readAllRole() {
         	$query = 'SELECT
 				`id`, `role_name`, `role_status`
-                    	  FROM `' . $this->table_role .'`
-			  WHERE `role_status` = 1
-                    	  ORDER BY `role_name`;';
+                    	  FROM 
+				`' . $this->table_role .'`
+			  WHERE 
+				`role_status` = 1 ';
+		if (!$this->issysadmin) {
+			$query .= ' AND `role_name`<> :system';
+		} 
+                $query .=' ORDER BY 
+				`role_name`;';
 		$stmt = $this->conn->prepare($query);
-
+		if (!$this->issysadmin) {
+			$stmt->bindParam(":sysadmin", $this->sysadmin, PDO::PARAM_STR);
+		}
+	
+		
 		$stmt->execute();
 		return $stmt;
     	}
@@ -137,7 +158,8 @@ class User {
     	function readOne() {
         	$query = 'SELECT
                     		`id`, `name`, `department`, `position`, `role_id`, `username`, `password`, `user_status`
-			  FROM `' . $this->table_name . '`
+			  FROM 
+				`' . $this->table_name . '`
                     	  WHERE
 				`id` = ?
                     	  LIMIT
@@ -167,7 +189,8 @@ class User {
 					`username` = :username,
 					`password` = :password,
                   			`user_status` = :user_status
-                  	  WHERE `id` = :id;';
+                  	  WHERE 
+				`id` = :id;';
         	$stmt = $this->conn->prepare($query);
         	$this->name = htmlspecialchars(strip_tags($this->name));
         	$this->department = htmlspecialchars(strip_tags($this->department));
@@ -196,7 +219,8 @@ class User {
     	function delete() {
         	$query = 'UPDATE `' . $this->table_name . '` SET
 				`delete_status` = 1
-                    	  WHERE FIND_IN_SET(`id`, :array);';
+                    	  WHERE 
+				FIND_IN_SET(`id`, :array);';
 
         	$stmt = $this->conn->prepare($query);
         	$ids_string = implode(',', $this->id);
