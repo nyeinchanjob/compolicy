@@ -27,13 +27,13 @@
           					</md-card-title-text>
         				</md-card-title>
         				<md-content layout="column">
-          					<img layout-padding ng-show="thumbnail.dataUrl1 != null" ng-src="{{ thumbnail.dataUrl1 }}" class="md-card-image" alt="outlet_image1"/>
+          					<img layout-padding ng-show="outletInfo.image_path_1 != null" ng-src="{{ outletInfo.image_path_1 }}" class="md-card-image" alt="outlet_image1"/>
           					<md-divider></md-divider>
 
         				</md-content>
         				<md-card-action layout="row" layout-align="start center">
           					<md-input-container flex>
-            						<input aria-label="image1" type="file" name="file1" onchange="angular.element(this).scope().photoChanged(this.files)" />
+            						<input id="file1" aria-label="image1" type="file" name="file1" onchange="angular.element(this).scope().photoChanged(this.files, 'file1')" ng-files ="getTheFiles($files, 'file1')" />
           					</md-input-container>
         				</md-card-action>
       				</md-card>
@@ -44,13 +44,13 @@
 				</md-card-title-text>
 			</md-card-title>
 			<md-content layout="column">
-				<img layout-padding ng-show="thumbnail.dataUrl2 != null" ng-src="{{ thumbnail.dataUrl2 }}" class="md-card-image" alt="outlet_image2"/>
+				<img layout-padding ng-show="outletInfo.image_path_2 != null" ng-src="{{outletInfo.image_path_2}}" class="md-card-image" alt="outlet_image2"/>
 				<md-divider></md-divider>
                                                                                                                                                                     
 			</md-content>
 			<md-card-action layout="row" layout-align="start center">
 				<md-input-container flex>
-					<input aria-label="image2" type="file" name="file2" onchange="angular.element(this).scope().photoChanged(this.files)" />
+					<input id="file2" aria-label="image2" type="file" name="file2" onchange="angular.element(this).scope().photoChanged(this.files, 'file2')" ng-files="getTheFiles($files, 'file2')"/>
 				</md-input-container>
 			</md-card-action>
 		</md-card>
@@ -61,13 +61,13 @@
 				</md-card-title-text>
 			</md-card-title>
 			<md-content layout="column">
-				<img layout-padding ng-show="thumbnail.dataUrl3 != null" ng-src="{{ thumbnail.dataUrl3 }}" class="md-card-image" alt="outlet_image3"/>
+				<img layout-padding ng-show="outletInfo.image_path_3 != null" ng-src="{{outletInfo.image_path_3}}" class="md-card-image" alt="outlet_image3"/>
 				<md-divider></md-divider>
                                                                                                                                                                     
 			</md-content>
 			<md-card-action layout="row" layout-align="start center">
 				<md-input-container flex>
-					<input aria-label="image3" type="file" name="file3" onchange="angular.element(this).scope().photoChanged(this.files)" />
+					<input id="file3" aria-label="image3" type="file" name="file3" onchange="angular.element(this).scope().photoChanged(this.files, 'file3')" ng-files="getTheFiles($files, 'file3')"/>
 				</md-input-container>
 			</md-card-action>
 		</md-card>

@@ -23,19 +23,51 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 		phone1 :undefined, phone2 : undefined, phone3 : undefined,
 		survey_status :undefined,
 		longitude : undefined, latitude : undefined,
-		image_path_1 : undefined, image_path_2 : undefined, image_path_3 : undefined,
+		image_path_1 : 'img/outlet.png', image_path_2 : 'img/outlet.png', image_path_3 : 'img/outlet.png',
 		user_id : undefined
-	}
+	};
 	$scope.answers = [];
 	$scope.other_size_radio = false;
 	$scope.checkedByInserted = false;
 	$scope.other_type_check = false;
 	$scope.cbselected = [];
+	$scope.action = 'new';
 	$scope.detailTitle = '၏ အချက်အလက်များ';
 	$scope.geo_path = 'img/maps.png';
 
+	var file1;
+	var file2;
+	var file3;
+
+	$scope.cancel = function() {
+		$scope.outletInfo = {
+        		id : undefined,
+        		area : undefined,
+        		city_mm : undefined, city_en : undefined,
+        		township_mm :undefined, township_en : undefined,
+        		ward_mm : undefined, ward_en : undefined,
+        		outlet_type : undefined,
+        		outlet_mm : undefined, outlet_en : undefined,
+        		owner_mm : undefined, owner_en : undefined,
+        		phone1 :undefined, phone2 : undefined, phone3 : undefined,
+        		survey_status :undefined,
+        		longitude : undefined, latitude : undefined,
+        		image_path_1 : 'img/outlet.png', image_path_2 : 'img/outlet.png', image_path_3 : 'img/outlet.png',
+        		user_id : undefined
+		};
+		$scope.answers = [];
+		$scope.geo_path = 'img/maps.png';
+		$scope.show_detail = false;
+		$scope.action = 'new';
+		file1 = undefined;
+		file2 = undefined;
+		file3 = undefined;
+	};
+
 	$scope.showProductDetail = function() {
+		$scope.cancel();
 		$scope.show_detail = true;
+		$scope.action = 'new';
 	};
 
 	$scope.getAll = function() {
@@ -47,28 +79,162 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 
 
 	$scope.readOne = function(id) {
-		$mdDialog.show({
-			controller: DialogController,
-			templateUrl: 'templates/surveys/survey_detail.html',
-			locals: {
-				id: id,
-				action: 'update'
-			},
-			scope: $scope,
-			preserveScope: true,
-			parent: angular.element(document.body),
-			clickOutsideToClose: false,
-		});
+		$scope.action = 'update';
+		$scope.show_detail = true;
+		$http.post('db_controller/surveys/read_one_survey.php', {
+        		'id': id
+        	}).success(function(data, status, headers, config) {
+        		$scope.outletInfo = {
+        			id : data[0]['id'],
+        			area : data[0]['area'],
+        			city_mm : data[0]['city_mm'], city_en : data[0]['city_en'],
+        			township_mm : data[0]['township_mm'], township_en : data[0]['township_en'],
+        			ward_mm : data[0]['ward_mm'], ward_en : data[0]['ward_en'],
+        			outlet_type :data[0]['outlet_type'],
+        			outlet_mm : data[0]['outlet_mm'], outlet_en : data[0]['outlet_en'],
+        			owner_mm : data[0]['owner_mm'], owner_en : data[0]['owner_en'],
+				phone1 : data[0]['phone1'], phone2 : data[0]['phone2'], phone3 : data[0]['phone3'],
+				survey_status : data[0]['survey_status'] == '1' ? true : false,
+        			longitude : data[0]['longitude'], latitude : data[0]['latitude'],
+				image_path_1 : data[0]['image_path_1'], image_path_2 : data[0]['image_path_2'], image_path_3 : data[0]['image_path_3'],
+				user_id : data[0]['user_id']
+        		};
+
+			$scope.geo_path = "https://maps.googleapis.com/maps/api/staticmap?center=" + $scope.outletInfo.latitude + "," +
+                    			$scope.outletInfo.longitude + "&zoom=14&size=200x200&scale=2&maptype=roadmap&markers=color:red|" +
+                    			$scope.outletInfo.latitude + ',' + $scope.outletInfo.longitude + "&key=AIzaSyBj6iTbEOvpPuxn8I4jjuRC2Oq4j6m16FU";
+
+
+		}).error(function() {
+        		$mdToast.show(
+        			$mdToast.simple()
+        				.textContent('Loading data caught Error. Please try again!')
+        				.position('top left' )
+        				.hideDelay(2000)
+        			);
+        	});
 	};
 
-	$scope.delete = function() {
-		if (confirm("Are you sure want to delete?")) {
-			$http.post('db_controller/surveys/delete_survey.php', {
-				'id': $scope.cbselected
+	$scope.create = function() {
+		if ($scope.outletInfo.outlet_mm != undefined && $scope.outletInfo.outlet_en !=	undefined &&
+			$scope.answers.length != 0) {
+			$http.post('db_controller/surveys/create_survey.php', {
+				'area': $scope.outletInfo.area,
+				'city_mm': $scope.outletInfo.city_mm, 'city_en' : $scope.outletInfo.city_en,
+				'township_mm' : $scope.outletInfo.township_mm, 'township_en' : $scope.outletInfo.township_en,
+				'ward_mm' :  $scope.outletInfo.ward_mm, 'ward_en' : $scope.outletInfo.ward_en,
+				'outlet_type' : $scope.outletInfo.outlet_type,
+				'outlet_mm': $scope.outletInfo.outlet_mm, 'outlet_en' : $scope.outletInfo.outlet_en,
+				'owner_mm': $scope.outletInfo.owner_mm, 'owner_en' : $scope.outletInfo.owner_en,
+				'phone1' : $scope.outletInfo.phone1, 'phone2' : $scope.outletInfo.phone2, 'phone3' : $scope.outletInfo.phone3,
+				'survey_status': $scope.outletInfo.survey_status,
+				'longitude' : $scope.outletInfo.longitude, 'latitude' : $scope.outletInfo.latitude,
+				'image_path_1' : $scope.outletInfo.image_path_1, 'image_path_1' : $scope.outletInfo.image_path_2, 'image_path_3' : $scope.outletInfo.image_path_3,
+				'user_id' : $scope.outletInfo.user_id,
+				'answers' : $scope.answers
 			}).success(function(data, status, headers, config) {
+				$scope.cancel();
 				$scope.getAll();
 			});
+		    var $f1 = file1;
+		    var $f2 = file2;
+		    var $f3 = file3;
+		    Upload.upload({
+			url : 'img/outlet/',
+			file: $f1,
+			progress : function(e){}
+		    }).then(function(data, status, headers, config) {});
+
+		    Upload.upload({
+			url : 'img/outlet/',
+			file : $f2,
+			progress : function(e){}
+		    }).then(function(data, status, headers, config){});
+
+		    Upload.upload({
+			url : 'img/outlet/',
+			file: $f3,
+			progress : function(e){}
+		    }).then(function(data, status, headers, config){});
+		} else {
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent('Data are undefined. System can not save.')
+					.position('top left' )
+					.hideDelay(2000)
+				);
 		}
+
+	};
+
+	$scope.update = function() {
+		if ($scope.outletInfo.outlet_mm != undefined && $scope.outletInfo.outlet_en != undefined &&
+			$scope.answers.length != 0) {
+			$http.post('db_controller/surveys/update_survey.php', {
+				'id': $scope.outletInfo.id,
+				'area': $scope.outletInfo.area,
+        			'city_mm': $scope.outletInfo.city_mm, 'city_en' : $scope.outletInfo.city_en,
+        			'township_mm' : $scope.outletInfo.township_mm, 'township_en' : $scope.outletInfo.township_en,
+        			'ward_mm' :  $scope.outletInfo.ward_mm, 'ward_en' : $scope.outletInfo.ward_en,
+        			'outlet_type' : $scope.outletInfo.outlet_type,
+        			'outlet_mm': $scope.outletInfo.outlet_mm, 'outlet_en' : $scope.outletInfo.outlet_en,
+        			'owner_mm': $scope.outletInfo.owner_mm, 'owner_en' : $scope.outletInfo.owner_en,
+        			'phone1' : $scope.outletInfo.phone1, 'phone2' : $scope.outletInfo.phone2, 'phone3' : $scope.outletInfo.phone3,
+        			'survey_status': $scope.outletInfo.survey_status,
+        			'longitude' : $scope.outletInfo.longitude, 'latitude' : $scope.outletInfo.latitude,
+        			'image_path_1' : $scope.outletInfo.image_path_1, 'image_path_1' : $scope.outletInfo.image_path_2, 'image_path_3' : $scope.outletInfo.image_path_3,
+        			'user_id' : $scope.outletInfo.user_id,
+        			'answers' : $scope.answers
+			}).success(function(data, status, headers, config) {
+				$scope.cancel();
+				$scope.getAll();
+			});
+		} else {
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent('Data are undefined. System can not update.')
+					.position('top left' )
+					.hideDelay(2000)
+				);
+		}
+	};
+ 	$scope.delete = function() {
+  		if (confirm("Are you sure want to delete?")) {
+  			$http.post('db_controller/surveys/delete_survey.php', {
+  				'id': $scope.cbselected
+  			}).success(function(data, status, headers, config) {
+  				$scope.getAll();
+  			});
+  		}
+	};
+
+	$scope.buttonAction = $scope.action == 'new' ? 'save' : 'update';
+
+	$scope.changeActive = function(value) {
+		$scope.outletInfo.survey_status = value;
+	};
+
+	$scope.AddToAnswer = function(item, list) {
+		if (item.answer != 0 && item.answer != undefined) {
+			for (var i = 0; i< list.length; i++) {
+				var qas = list[i];
+				if (qas.question_id == item.config_id) {
+					list.splice(i, 1);
+				}
+
+			}
+			var ans = {
+					'question_id': item.config_id,
+					'answer' : item.answer
+			};
+			list.push(ans);
+		} else if (item.answer == 0 || item.answer == undefined) {
+			var idx = list.indexOf(item.config_id);
+			if (idx > -1) {
+				list.splice(idx, 1);
+			}
+		}
+		console.log(list);
 	};
 
 	$scope.checkedToEdit = function(item, list) {
@@ -79,34 +245,34 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 			list.push(item);
 		}
 		$scope.cbValue.cbselect_edit = list.length > 0 ? true : false;
-	}
+	};
 
 	$scope.exists = function(item, list) {
 		if (list.length > 0) {
 			return list.indexOf(item) > -1;
 		}
-	}
+	};
 
 	$scope.isChecked = function() {
 		if ($scope.items != undefined) {
 			return ($scope.cbselected.length === $scope.items.length);
 		}
-	}
+	};
 	$scope.isIndeterminate = function() {
 		return ($scope.cbselected.length !== 0 &&
 			$scope.cbselected.length !== $scope.items.length);
-	}
+	};
 	$scope.selectAll = function() {
 		if ($scope.cbselected.length === $scope.items.length) {
 			$scope.cbselected = [];
 		} else if ($scope.cbselected.length === 0 || $scope.cbselected.length > 0) {
 			for (var i = 0; i < $scope.items.length; i++) {
-				$scope.cbselected.push($scope.items[i]['product_id']);
+				$scope.cbselected.push($scope.items[i]['id']);
 			}
 		}
 		$scope.cbValue.cbselect_edit = $scope.cbselected.length > 0 ? true :
 			false;
-	}
+	};
 
 	$scope.next = function (layout) {
 		if (layout == "survey_info") {
@@ -121,7 +287,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 			$scope.show_next = false;
 			$scope.detailTitle = '၏ တည်နေရာ ';
 		}
-	}
+	};
 
 	$scope.previous = function (layout) {
 		if (layout == "survey_location") {
@@ -136,20 +302,21 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 			$scope.show_previous = false;
 			$scope.detailTitle = '၏ အချက်အလက်များ ';
 		}
-	}
+	};
 
 	$scope.DetailClose = function() {
 		$scope.show_detail = false;
-	}
+	};
+
 	$scope.initiate_geolocation = function() {
   		navigator.geolocation.getCurrentPosition($scope.handle_geolocation_query, $scope.handle_errors);
   	}
 
   	$scope.handle_geolocation_query = function(position) {
-		
+
 		$scope.outletInfo.latitude = position.coords.latitude;
     		$scope.outletInfo.longitude = position.coords.longitude;
-		
+
 		$scope.geo_path = "https://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," +
                     position.coords.longitude + "&zoom=14&size=200x200&scale=2&maptype=roadmap&markers=color:red|" +
                     position.coords.latitude + ',' + position.coords.longitude + "&key=AIzaSyBj6iTbEOvpPuxn8I4jjuRC2Oq4j6m16FU"  ;
@@ -157,32 +324,39 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 
 	$scope.handle_errors = function(error) {
     		switch(error.code) {
-      			case error.PERMISSION_DENIED: 
+      			case error.PERMISSION_DENIED:
 				alert("user did not share geolocation data");
       				break;
 
-      			case error.POSITION_UNAVAILABLE: 
+      			case error.POSITION_UNAVAILABLE:
 				alert("could not detect current position");
       				break;
 
-      			case error.TIMEOUT: 
+      			case error.TIMEOUT:
 				alert("retrieving position timed out");
       				break;
 
-      			default: 
+      			default:
 				alert("unknown error");
       				break;
   		}
 	}
-	
-	$scope.thumbnail = {
-		dataUrl: 'img/outlet.png'
-	};
-	
+
 	$scope.fileReaderSupported = window.FileReader != null;
-	
-	$scope.photoChanged = function(files){
+
+	$scope.photoChanged = function(files, file_name){
 		if (files != null) {
+			switch(file_name) {
+				case "file1":
+					file1 = files[0];
+					break;
+				case "file2":
+					file2 = files[0];
+					break;
+				case "file3":
+					file3 = files[0];
+					break;
+			}
 	  		var file = files[0];
 	    		if ($scope.fileReaderSupported && file.type.indexOf('image') > -1) {
 	      			$timeout(function() {
@@ -190,13 +364,84 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 	          			fileReader.readAsDataURL(file);
 	          			fileReader.onload = function(e) {
 	          				$timeout(function(){
-	 						$scope.thumbnail.dataUrl = e.target.result;
-							console.log(files);
+							switch(file_name) {
+								case "file1":
+	 								$scope.outletInfo.image_path_1 = e.target.result;
+									console.log(file.name);
+									break;
+								case "file2":
+									$scope.outletInfo.image_path_2 = e.target.result;
+									break;
+								case "file3":
+									$scope.outletInfo.image_path_3 = e.target.result;
+									break;
+							}
 	            				});
 	          			}
 	        		});
 	      		}
 	  	}
+	};
+
+	var formdata1 = new FormData();
+	var formdata2 = new FormData();
+	var formdata3 = new FormData();
+	$scope.getTheFiles = function($files, file_name) {
+		angular.forEach($files, function(value, key) {
+			switch(file_name) {
+				case "file1":
+					formdata1.append(key, value);
+					break;
+				case "file2":
+					formdata2.append(key, value);
+					break;
+				case "file3":
+					formdata3.append(key, value);
+					break;
+			}
+		});
+
+	};
+
+	$scope.uploadFile = function() {
+		var request1 = {
+			method : 'POST',
+			url : 'img/fileUpload/',
+			data : formdata1,
+			headers : {
+				'Content-Type' : undefined
+			}
+		};
+
+		var request2 = {
+        		method : 'POST',
+        		url : 'img/fileUpload/',
+        		data : formdata2,
+        		headers : {
+        			'Content-Type' : undefined
+        		}
+        	};
+
+		var request3 = {
+			method : 'POST',
+			url : 'img/fileUpload/',
+			data : formdata3,
+			headers : {
+				'Content-Type' : undefined
+			}
+		};
+
+		$http(request1)
+			.success(function (d) {})
+			.error(function (){});
+
+		$http(request2)
+			.success(function (d) {})
+			.error(function () {});
+
+		$http(request3)
+			.success(function (d) {})
+			.error(function () {});
 	};
 
 	$scope.loadConfig = function() {
@@ -206,207 +451,23 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
 		}).success(function(response) {
 			$scope.questions = response.records[0].questions;
 			$scope.outlet_types = response.records[1].outlet_types;
-			// if (action == 'new') { $scope.outletInfo.size_id = response.records[1].sizes[0]['config_id'];}
-
 		})
 	};
 
 
 }]);
 
-function DialogController($scope, $http, $mdDialog, id, action) {
-
-	if (id != undefined) {
-		$http.post('db_controller/surveys/read_one_survey.php', {
-			'id': id
-		}).success(function(data, status, headers, config) {
-			$scope.outletInfo = {
-				product_id : data[0]['id'],
-				product_code : data[0]['code'],
-				product_name : data[0]['name'],
-				brand_id : data[0]['brandId'],
-				size_id : data[0]['sizeId'],
-				type_id :[],
-				other_size_detail : data[0]['otherSizeDetail'],
-				other_type_detail : data[0]['otherTypeDetail'],
-				product_status: data[0]['status'] == '1' ? true : false
-			};
-			if (data[0]['otherSizeDetail'].length>0) { $scope.other_size_radio = true; }
-			if (data[0]['otherTypeDetail'].length>0) { $scope.other_type_check = true; }
-
-		}).error(function(data, status, headers, config) {
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent('Loading data caught Error. Please try again!')
-					.position('top left' )
-					.hideDelay(2000)
-				);
+MyApp.directive('ngFiles', ['$parse', function ($parse) {
+	function fn_link (scope, element, attrs) {
+		var onChange = $parse(attrs.ngFiles);
+		element.on('change', function(event) {
+			onChange(scope, { $files: event.target.files });
 		});
+	};
 
-		$http.post('db_controller/survyes/read_type_survey.php', {
-			'id' : id
-		}).success(function(data, status, headers, config) {
-			$scope.outletInfo.type_id = data[0]['typeId'];
-
-		}).error(function(data, status, headers, config) {
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent('Loading data caught on Type Error. Please try again!')
-					.position('top left' )
-					.hideDelay(2000)
-				);
-		});
-
+	return {
+		link: fn_link
 	}
-
-	$scope.hideOtherRadio = function(item) {
-				$scope.other_size_radio = item.config_code == 'oth' ? true : false;
-	};
-
-	$scope.checkedByInserted = function(id) {
-		if ($scope.outletInfo.type_id.length>0) {
-			var checked = false;
-			for(var i = 0; i< $scope.outletInfo.type_id.length; i++) {
-				if (id == $scope.outletInfo.type_id[i]) {
-					checked = true;
-				}
-			}
-		}
-		return checked;
-	}
-
-	$scope.buttonAction = action == 'new' ? 'save' : 'update';
-
-	$scope.cancel = function() {
-		$scope.outletInfo = {
-			product_id: undefined,
-			product_code: undefined,
-			product_name: undefined,
-			brand_id : undefined,
-			size_id : undefined,
-			other_size_detail : undefined,
-			type_id : [],
-			other_type_detail : undefined,
-			product_status: true
-		}
-		$mdDialog.cancel();
-	};
-
-	$scope.changeActive = function(value) {
-		$scope.outletInfo.product_status = value;
-	};
-
-	$scope.checkedType = function(item, list) {
-		var idx = list.indexOf(item.config_id);
-		if (idx > -1) {
-			list.splice(idx, 1);
-		} else {
-			list.push(item.config_id);
-		}
-		if (item.config_code == 'oth') {
-			$scope.other_type_check =  !$scope.other_type_check;
-		}
-	};
-
-	$scope.create = function() {
-		console.log($scope.outletInfo.other_type_checked);
-		if ($scope.outletInfo.product_code != undefined && $scope.outletInfo.product_name !=
-			undefined &&
-			$scope.outletInfo.product_status != undefined) {
-			$http.post('db_controller/surveys/create_survey.php', {
-				'code': $scope.outletInfo.product_code,
-				'name': $scope.outletInfo.product_name,
-				'brandId' : $scope.outletInfo.brand_id,
-				'sizeId' :  $scope.outletInfo.size_id,
-				'typeId' : $scope.outletInfo.type_id,
-				'sizeOtherDetail': $scope.outletInfo.other_size_detail,
-				'typeOtherDetail': $scope.outletInfo.other_type_detail,
-				'status': $scope.outletInfo.product_status
-			}).success(function(data, status, headers, config) {
-				$scope.outletInfo = {
-					product_id: undefined,
-					product_code: undefined,
-					product_name: undefined,
-					brand_id : undefined,
-					size_id : undefined,
-					other_size_detail : undefined,
-					type_id : [],
-					other_type_detail : undefined,
-					product_status: true
-				};
-				$scope.getAll();
-			});
-		} else {
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent('Data are undefined. System can not save.')
-					.position('top left' )
-					.hideDelay(2000)
-				);
-		}
-	};
-
-	$scope.update = function() {
-		if ($scope.outletInfo.product_code != undefined && $scope.outletInfo.product_name !=
-			undefined &&
-			$scope.outletInfo.product_status != undefined) {
-			$http.post('db_controller/surveys/update_survey.php', {
-				'id': id,
-				'code': $scope.outletInfo.product_code,
-				'name': $scope.outletInfo.product_name,
-				'brandId' : $scope.outletInfo.brand_id,
-				'sizeId' : $scope.outletInfo.size_id,
-				'typeId' : $scope.outletInfo.type_id,
-				'sizeOtherDetail': $scope.outletInfo.other_size_detail,
-				'typeOtherDetail': $scope.outletInfo.other_type_detail,
-				'status': $scope.outletInfo.product_status
-			}).success(function(data, status, headers, config) {
-				$scope.outletInfo = {
-					product_id: undefined,
-					product_code: undefined,
-					product_name: undefined,
-					brand_id : undefined,
-					size_id : undefined,
-					other_size_detail : undefined,
-					type_id : [],
-					other_type_detail : undefined,
-					product_status: true
-				};
-				$scope.getAll();
-			});
-		} else {
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent('Data are undefined. System can not update.')
-					.position('top left' )
-					.hideDelay(2000)
-				);
-		}
-	};
-
-	$scope.getAll = function() {
-		$http.get('db_controller/surveys/read_survey.php').success(function(
-			response) {
-			$scope.items = response.records;
-		});
-	};
-
-}
-
-MyApp.directive('fileModel', ['$parse', function ($parse) {
-  return {
-     restrict: 'A',
-     link: function(scope, element, attrs) {
-        var model = $parse(attrs.fileModel);
-        var modelSetter = model.assign;
-
-        element.bind('change', function(){
-           scope.$apply(function(){
-              modelSetter(scope, element[0].files[0]);
-           });
-        });
-     }
-  };
 }]);
 
 MyApp.service('fileUpload', ['$http', function ($http) {

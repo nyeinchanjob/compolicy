@@ -2,11 +2,10 @@
 	<form name="outletQuestion">
 		<div flex ng-cloak="" ng-repeat="question in questions" class="dark-body-color">
 			<md-card layout-padding layout= "row" flex >
-				
+						<md-icon md-svg-src="img/icons/bottle_24px.svg" class="answer"></md-icon>
 				<md-input-container class="md-icon-float md-block" flex>
 					<label>{{question.config_value}}</label>
-					<!--<md-icon md-svg-src="img/icons/ic_rate_review_black_24px.svg" class="answer"></md-icon>-->
-					<input type="number" min="0" max="999999" ng-value="question.answer">
+					<input type="number" min="0" max="999999" ng-model="question.answer"  ng-value="question.answer" ng-change="AddToAnswer(question, answers);">
 					<div class="hint">Answer with only english digit numbers (0 ~ 9).</div>
 				</md-input-container>
 				
