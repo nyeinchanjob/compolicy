@@ -14,11 +14,12 @@ header("Content-Type: application/json; charset=UTF-8");
 	} else {
 		echo 'Unable to include user file.';
 	}
-	
+
 	$para = json_decode(file_get_contents('php://input'));
 	$user->issysadmin = $para->issysadmin;
 	$role_list = $user->readAllRole();
 	$role_num = $role_list->rowCount();
+
 	$data = '';
 	if($role_num>0) {
 		$x = 1;

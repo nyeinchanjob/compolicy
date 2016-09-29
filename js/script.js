@@ -21,6 +21,7 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav) {
     $scope.bundle_deals = [];
     $rootScope.user_name = '';
 	//$scope.user_name = $rootScope.user_name;
+	$rootScope.role_id = '';
     $rootScope.loginCorrect = false;
     $scope.show_layout='survey_list';
 

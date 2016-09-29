@@ -5,7 +5,7 @@ class Database {
 	private $host = 'localhost';
 	private $db_name = 'outletsurvey';
 	private $user_name = 'super';
-	private $password = 'suPer@123';
+	private $password = 'suPer$123';
 
 	public $conn;
 

@@ -95,7 +95,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$time
         			owner_mm : data[0]['owner_mm'], owner_en : data[0]['owner_en'],
 				phone1 : data[0]['phone1'], phone2 : data[0]['phone2'], phone3 : data[0]['phone3'],
 				survey_status : data[0]['survey_status'] == '1' ? true : false,
-        			longitude : data[0]['longitude'], latitude : data[0]['latitude'],
+        		longitude : data[0]['longitude'], latitude : data[0]['latitude'],
 				image_path_1 : data[0]['image_path_1'], image_path_2 : data[0]['image_path_2'], image_path_3 : data[0]['image_path_3'],
 				user_id : data[0]['user_id']
         		};

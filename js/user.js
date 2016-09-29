@@ -1,22 +1,34 @@
 //angular.module('MyUser', ['ngMaterial', 'ngMessages'])
 var MyApp = angular.module('MyApp');
-MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', function(
-	$scope, $mdDialog, $http, $mdToast) {
+MyApp.run(function ($rootScope){
+	$rootScope.$on('scope.stored', function (event, data){
+		console.log('scope.stored', data);
+	});
+});
+MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$rootScope', 'Scopes',
+	function(
+	$scope, $mdDialog, $http, $mdToast, $rootScope, Scopes) {
+	Scopes.store('userScopes', $scope);
 	$scope.cbValue = {};
+	$scope.items = $rootScope.userItems;
 	$scope.cbValue.cbselect_all = false;
 	$scope.cbValue.cbselect_edit = false;
 	$scope.userInfo = {
 		id: undefined,
 		user_name: undefined,
 		user_status: true
-	}
+	};
+	$scope.role_id = '';
 	$scope.org_name = '';
 	$scope.org_username = '';
-	$scope.permissionSelected = {};
+	$scope.org_password = '';
 	$scope.cbselected = [];
 	$scope.menu_arr = [];
+	$scope.divpassword = true;
+	$scope.divcheckpassword = false;
 
 	$scope.showUserDetail = function() {
+		$scope.role_id = $rootScope.role_id;
 		$mdDialog.show({
 			controller: 'UserDialogCtrl',
 			templateUrl: 'templates/users/user_detail.html',
@@ -28,13 +40,6 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', functi
 			preserveScope: true,
 			parent: angular.element(document.body),
 			clickOutsideToClose: false,
-		});
-	};
-
-	$scope.getAll = function() {
-		$http.get('db_controller/users/read_user.php').success(function(
-			response) {
-			$scope.items = response.records;
 		});
 	};
 
@@ -93,27 +98,27 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', functi
 	$scope.selectAll = function() {
 		if ($scope.cbselected.length === $scope.items.length) {
 			$scope.cbselected = [];
-		} else if ($scope.cbselected.length === 0 || $scope.cbselected.length > 0) {
+		} else if ($scope.cbselected.length === 0 ||
+			$scope.cbselected.length > 0) {
 			for (var i = 0; i < $scope.items.length; i++) {
 				$scope.cbselected.push($scope.items[i]['id']);
 			}
 		}
 		$scope.cbValue.cbselect_edit = $scope.cbselected.length > 0 ? true :
 			false;
-	}
-
+	};
 }]);
 
-MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, action) {
+
+MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
+	$mdToast, id, action) {
 
 	if (id != undefined) {
-		$http.post('db_controller/users/read_role.php', {   	
-        			
+		$http.post('db_controller/users/read_role.php', {
+      				'issysadmin': $scope.role_id == '1' ? true : false
         		}).success(function(response) {
         			$scope.roles = response.records;
         		});
-
-
 		$http.post('db_controller/users/read_one_user.php', {
 			'id': id
 		}).success(function(data, status, headers, user) {
@@ -130,6 +135,10 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 			};
 			$scope.org_name = data[0]['name'];
 			$scope.org_username = data[0]['username'];
+			$scope.org_password = data[0]['password'];
+			$scope.divpassword = false;
+			$scope.divcheckpassword = true;
+			$scope.org_confirm_password = undefined;
 		}).error(function(data, status, headers, user) {
 			$mdToast.show(
 				$mdToast.simple()
@@ -141,8 +150,8 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 	}
 
 	$scope.loadConfig = function () {
-		$http.post('db_controller/users/read_role.php', {   	
-        			
+		$http.post('db_controller/users/read_role.php', {
+        			'issysadmin' : $scope.role_id == '1' ? true : false
         		}).success(function(response) {
         			$scope.roles = response.records;
         		});
@@ -163,7 +172,38 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 			confirmPassword : undefined,
 			user_status: true
 		}
+		$scope.org_confirm_password = undefined;
+		$scope.role_id = '';
+		$scope.org_name = '';
+		$scope.org_username = '';
+		$scope.org_password = '';
+		$scope.divpassword = true;
+		$scope.divcheckpassword = false;
 		$mdDialog.cancel();
+	};
+
+	$scope.letmechange = function() {
+		if ($scope.org_confirm_password != undefined) {
+			if ($scope.org_confirm_password == $scope.org_password) {
+				$scope.divpassword = true;
+				$scope.divcheckpassword = false;
+			} else {
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent("You can't access to change this user's informations.")
+						.position('top left' )
+						.hideDelay(2000)
+					);
+				$scope.org_confirm_password = '';
+			}
+		} else {
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent("Type current user's password to change.")
+					.position('top left' )
+					.hideDelay(2000)
+				);
+		}
 	};
 
 	$scope.changeActive = function(value) {
@@ -171,7 +211,8 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 	};
 
 	$scope.create = function() {
-		if ($scope.userInfo.username != undefined && $scope.userInfo.name != undefined) {
+		if ($scope.userInfo.username != undefined &&
+			$scope.userInfo.name != undefined) {
 			$scope.checkAndSave();
 		} else {
 			$mdToast.show(
@@ -194,18 +235,21 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 					if (Object.keys(data).length ==0) {
 						$scope.save();
 					} else {
-						$mdToast.show(                                                                                      		
+						$mdToast.show(
         						$mdToast.simple()
-        							.textContent($scope.userInfo.username + ' being already used by  another user. System can not save.')
+        							.textContent($scope.userInfo.username +
+									' being already used by  another user.' +
+									'System can not save.')
         							.position('top left' )
         							.hideDelay(2000)
-						);                                                                                          	
+						);
 					}
 				});
 			} else {
 				$mdToast.show(
 					$mdToast.simple()
-						.textContent($scope.userInfo.user_name + ' is already Exists. System can not save.')
+						.textContent($scope.userInfo.user_name +
+						' is already Exists. System can not save.')
 						.position('top left' )
 						.hideDelay(2000)
 					);
@@ -239,8 +283,10 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 	};
 
 	$scope.update = function() {
-		if ($scope.userInfo.name != undefined && $scope.userInfo.username != undefined) {
-			if ($scope.org_name != $scope.userInfo.name && $scope.org_user_name != $scope.userInfo.username) {
+		if ($scope.userInfo.name != undefined &&
+				$scope.userInfo.username != undefined) {
+			if ($scope.org_name != $scope.userInfo.name &&
+					$scope.org_user_name != $scope.userInfo.username) {
 					$scope.checkAndUpdate();
 			} else {
 				$scope.edit();
@@ -261,18 +307,19 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 		}).success(function(data, status, headers, user) {
 			if (Object.keys(data).length == 0) {
 				$http.post('db_controller/users/check_login.php', {
-					'username' : $scope.userInfo.username 
+					'username' : $scope.userInfo.username
 				}).success(function(data, status, headers, user) {
 					if (Object.keys(data).length == 0) {
 						$scope.edit();
 					} else {
-					
+
 					}
 				});
 			} else {
 				$mdToast.show(
 					$mdToast.simple()
-						.textContent($scope.userInfo.user_name + ' is already Exists. System can not update.')
+						.textContent($scope.userInfo.user_name +
+						' is already Exists. System can not update.')
 						.position('top left' )
 						.hideDelay(2000)
 					);
@@ -281,26 +328,25 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 	}
 
 	$scope.edit = function() {
-		console.log($scope.permissionSelected);
 		$http.post('db_controller/users/update_user.php', {
 			'id': id,
-			'name': $scope.userInfo.name,             		
-        		'department' : $scope.userInfo.department,
-        		'position' : $scope.userInfo.position,
-        		'role_id' : $scope.userInfo.role_id,
-        		'username' : $scope.userInfo.username,
-        		'password' : $scope.userInfo.password,
-			'user_status': $scope.userInfo.user_status	
+			'name': $scope.userInfo.name,
+        	'department' : $scope.userInfo.department,
+        	'position' : $scope.userInfo.position,
+        	'role_id' : $scope.userInfo.role_id,
+        	'username' : $scope.userInfo.username,
+        	'password' : $scope.userInfo.password,
+			'user_status': $scope.userInfo.user_status
 		}).success(function(data, status, headers, user) {
 			$scope.userInfo = {
 				id: undefined,
-				name: undefined,       			
-        			department : undefined,
-        			position : undefined,
-        			role_id : undefined,
-        			username : undefined,
-        			password : undefined,
-        			user_status: true
+				name: undefined,
+        		department : undefined,
+        		position : undefined,
+        		role_id : undefined,
+        		username : undefined,
+        		password : undefined,
+        		user_status: true
 			};
 			$scope.getAll();
 			$mdDialog.cancel();
@@ -308,7 +354,9 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog, $mdToast, i
 	}
 
 	$scope.getAll = function() {
-		$http.get('db_controller/users/read_user.php').success(function(
+		$http.get('db_controller/users/read_user.php', {
+			'issysadmin':$scope.role_id == '1' ? true : false
+		}).success(function(
 			response) {
 			$scope.items = response.records
 		});
