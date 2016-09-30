@@ -2,12 +2,10 @@
 var MyApp = angular.module('MyApp');
 MyApp.run(function ($rootScope){
 	$rootScope.$on('scope.stored', function (event, data){
-		console.log('scope.stored', data);
 	});
 });
-MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$rootScope', 'Scopes',
-	function(
-	$scope, $mdDialog, $http, $mdToast, $rootScope, Scopes) {
+MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$rootScope', 'Scopes', '$cookies',
+	function($scope, $mdDialog, $http, $mdToast, $rootScope, Scopes, $cookies) {
 	Scopes.store('userScopes', $scope);
 	$scope.cbValue = {};
 	$scope.items = $rootScope.userItems;
@@ -18,7 +16,8 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$root
 		user_name: undefined,
 		user_status: true
 	};
-	$scope.role_id = '';
+	$scope.role_id = $rootScope.role_id;
+	$scope.role_name = $rootScope.role_name;
 	$scope.org_name = '';
 	$scope.org_username = '';
 	$scope.org_password = '';
@@ -43,7 +42,14 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$root
 		});
 	};
 
-
+	$scope.getAll = function() {
+		$http.get('db_controller/users/read_user.php', {
+			'issysadmin':$scope.role_name != 'surveyor' ? true : false
+		}).success(function(
+			response) {
+			$scope.items = response.records
+		});
+	};
 
 	$scope.readOne = function(id) {
 		$mdDialog.show({

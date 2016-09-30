@@ -1,7 +1,7 @@
-<md-content flex layout-fill ng-controller="SurveyCtrl" layout="column" ng-cloak="" class="body-color">
+<md-content flex layout-fill ng-controller="SurveyCtrl" layout="column" ng-cloak="" class="body-color" ng-init="getAll();">
   <div ng-show="show_detail==true" ng-include="'templates/surveys/survey_detail.html'"></div>
-  <div flex style="margin:10px;" layout="column" ng-init="getAll();" ng-show="show_detail==false">
-    <div flex>
+  <div flex style="margin:10px;" layout="column"  ng-show="show_detail==false">
+    <div>
       <label class="md-title" layout-padding style="color:red;">Survey List</label>
     </div>
     <div style="height:1%;">&nbsp;</div>
@@ -17,12 +17,12 @@
     <md-content flex class="body-color rounded-block" layout="column">
       <div ng-repeat="item in items">
         <md-card layout="row" layout-align="start center">
-          <md-checkbox class="margin-fifteen" aria-label="select_edit" ng-checked="exists(item.product_id, cbselected)" ng-click="checkedToEdit(item.product_id, cbselected);"></md-checkbox>
-          <md-button layout-fill layout-align="center center" ng-value="item.product_id" ng-model="item" ng-click="readOne(item.product_id)">
-            <span flex>{{item.product_name}}</span>
+          <md-checkbox class="margin-fifteen" aria-label="select_edit" ng-checked="exists(item.id, cbselected)" ng-click="checkedToEdit(item.id, cbselected);"></md-checkbox>
+          <md-button layout-fill layout-align="center center" ng-value="item.id" ng-model="item" ng-click="readOne(item.id)">
+            <span flex>{{item.outlet_mm}} [ {{item.city_mm}} - {{item.area}} ]</span>
           </md-button>
-          <md-button ng-disabled="item.product_status == '1' ? false : true" class="item.product_status == '1' ? md-warn : md-primary">
-            <span flex>{{item.product_status == '1' ? 'Active' : 'Inactive'}}</span>
+          <md-button ng-disabled="item.survey_status == '1' ? false : true" class="item.survey_status == '1' ? md-warn : md-primary">
+            <span flex>{{item.survey_status == '1' ? 'Active' : 'Inactive'}}</span>
           </md-button>
         </md-card>
       </div>

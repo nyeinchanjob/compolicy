@@ -22,14 +22,16 @@
     		'id' => $survey->id,
     		'area' => $survey->area,
     		'city_mm' => $survey->city_mm, 'city_en' => $survey->city_en,
-		'township_mm' => $survey->township_mm, 'township_en' => $survey->township_en,
-		'ward_mm' => $survey->ward_mm, 'ward_en' => $survey->ward_en,
-		'phone1' => $survey->phone1, 'phone2' => $survey->phone2, 'phone3' => $survey->phone3,
-		'longitude' => $survey->longitude, 'latitude' => $survey->latitude,
-		`image_path_1` => $survey->image_path_1, 'image_path_2' => $survey->image_path_2, 'image_path_3' => $survey->image_path_3,
-		'user_id' => $survey->user_id,
-		'status' => $survey->status
-  );
+			'township_mm' => $survey->township_mm, 'township_en' => $survey->township_en,
+			'outlet_mm' => $survey->outlet_mm, 'outlet_en' => $survey->outlet_en,
+			'owner_mm' => $survey->owner_mm, 'owner_en' => $survey->owner_en,
+			'ward_mm' => $survey->ward_mm, 'ward_en' => $survey->ward_en,
+			'phone1' => $survey->phone1, 'phone2' => $survey->phone2, 'phone3' => $survey->phone3,
+			'longitude' => $survey->longitude, 'latitude' => $survey->latitude,
+			`image_path_1` => $survey->image_path_1, 'image_path_2' => $survey->image_path_2, 'image_path_3' => $survey->image_path_3,
+			'user_id' => $survey->user_id,
+			'status' => $survey->status
+  	);
 
  	print_r(json_encode($survey_arr));
 ?>

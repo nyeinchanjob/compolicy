@@ -3,9 +3,9 @@ class Survey {
 	private $conn;
 	private $table_name = 'survey';
 	private $table_question = 'question';
-	private $table_config = '`config`';
+	private $table_config = 'config';
 
-	public $sid;
+	public $id;
 	public $area;
 	public $city_mm;
 	public $city_en;
@@ -23,9 +23,9 @@ class Survey {
 	public $phone3;
 	public $longitude;
 	public $latitude;
-	public $image1;
-	public $image2;
-	public $image3;
+	public $image_path_1;
+	public $image_path_2;
+	public $image_path_3;
 	public $survey_status;
 	public $user_id;
 	public $created_date;
@@ -61,31 +61,31 @@ class Survey {
 				`question_id`,
 				`answer`
 			 ) VALUES ';
-		for ($i = 0; $i<count($questions); $i++) {
+		for ($i = 0; $i<count($this->questions); $i++) {
 			$query .= '(';
-			$query .= ':survey_id, :question_id' . $i . ', :answer' .$i;
+			$query .= ':survey_id, :question_id' . $i . ', :answer' . $i;
 			$query .= ')';
-			$query .= ($i<$count($questions) - 1) ? ',' : ';';
+			$query .= ($i<count($this->questions) - 1) ? ',' : ';';
 		}
 
 		$stmt = $this->conn->prepare($query);
-		
-		for ($j = 0; $j <count($questions); $j++) {
-			$stmt->bindParam(":survey_id", $this->id, PDO::PARAM_STR);
-			$stmt->bindParam(":question_id". $j, $questions[$j]['question_id'], PDO::PARAM_SRT);
-			$stmt->bindParam(":answer".$j, $question[$j]['answer'], PDO::PARAM_STR);
+
+		for ($j = 0; $j<count($this->questions); $j++) {
+			$stmt->bindParam(":survey_id", $this->id, PDO::PARAM_INT);
+			$stmt->bindParam(":question_id". $j, $this->questions[$j]->question_id, PDO::PARAM_STR);
+			$stmt->bindParam(":answer".$j, $this->questions[$j]->answer, PDO::PARAM_STR);
 		}
 
-	
-        	if ($stmt->execute()) {
-        		return true;
-        	} else {
-        		echo '<pre> <br/>Create Question Error<br/>';
-        			print_r($stmt->errorInfo());
-        		echo '</pre>';
+
+    	if ($stmt->execute()) {
+    		return true;
+    	} else {
+    		echo '<pre> <br/>Create Question Error<br/>';
+    			print_r($stmt->errorInfo());
+    		echo '</pre>';
 			return false;
 		}
-                                                	
+
 	}
 
 	function create() {
@@ -99,9 +99,9 @@ class Survey {
 				`owner_mm`, `owner_en`,
 				`phone1`, `phone2`, `phone3`,
 				`longitude`, `latitude`,
-				`image_path_1` , `image_path_2`, `image_path_3`,
+				`image1` , `image2`, `image3`,
 				`user_id`,
-				`survey_status` 
+				`survey_status`
 			) VALUES (
 				:area,
 			 	:city_mm, :city_en,
@@ -131,7 +131,7 @@ class Survey {
 		$this->owner_en = htmlspecialchars(strip_tags($this->owner_en));
 		$this->phone1 = htmlspecialchars(strip_tags($this->phone1));
 		$this->phone2 = htmlspecialchars(strip_tags($this->phone2));
-		$this->phone3 = htmlspecialchars(strip_tags($this->phone3));	
+		$this->phone3 = htmlspecialchars(strip_tags($this->phone3));
 		$this->image_path_1 = htmlspecialchars(strip_tags($this->image_path_1));
 		$this->image_path_2 = htmlspecialchars(strip_tags($this->image_path_2));
 		$this->image_path_3 = htmlspecialchars(strip_tags($this->image_path_3));
@@ -159,7 +159,7 @@ class Survey {
 		$stmt->bindParam(":image_path_2", $this->image_path_2, PDO::PARAM_STR);
 		$stmt->bindParam(":image_path_3", $this->image_path_3, PDO::PARAM_STR);
 		$stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_STR);
-		$stmt->bindParam(":survey_status", $this->survey_status, PDO::PARAM_BOL);			
+		$stmt->bindParam(":survey_status", $this->survey_status, PDO::PARAM_BOOL);
 
 	// execute query
 
@@ -173,7 +173,7 @@ class Survey {
 				echo '<pre><br/> Unable to Create Survey.';
 				return false;
 			}
-			
+
 		} else {
 			echo '<pre> <br/>Create Survey Error<br/>';
 				print_r($stmt->errorInfo());
@@ -209,21 +209,28 @@ class Survey {
 				`id`,
 				`area`, `outlet_mm`, `township_mm`, `city_mm`, `survey_status`
 			FROM
-			' . $this->table_name . ' 
-			WHERE 
-				user_id = :user_id AND
-				survey_status = 1
-			ORDER BY
+			' . $this->table_name . '
+			WHERE
+				survey_status = 1';
+			if ($this->issysadmin == false) {
+				$query .= ' AND user_id = :user_id';
+			}
+
+			$query .=' ORDER BY
 				id DESC';
 		$stmt = $this->conn->prepare($query);
+		if ($this->issysadmin==false) {
+			$stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_STR);
+		}
+
 		$stmt->execute();
 		return $stmt;
 	}
 
 	function readOne() {
 		$query = 'SELECT
-				`id`, 
-				`area`, 
+				`id`,
+				`area`,
 				`city_mm`, `city_en`,
 				`township_mm`, `township_en`,
 				`ward_mm`, `ward_en`,
@@ -232,7 +239,7 @@ class Survey {
 				`owner_mm`, `owner_en`,
 				`phone1`, `phone2`, `phone3`,
 				`longitude`, `latitude`,
-				`image_path_1`, `image_path_2`, `image_path_3`,
+				`image1`, `image2`, `image3`,
 				`user_id`,
 			 	`survey_status`
 			FROM
@@ -260,14 +267,14 @@ class Survey {
 		$this->outlet_en = $row['outlet_en'];
 		$this->owner_mm = $row['owner_mm'];
 		$this->owner_en = $row['owner_en'];
-		$this->phone_1 = $row['phone_1'];
-		$this->phone_2 = $row['phone_2'];
-		$this->phone_3 = $row['phone_3'];
+		$this->phone1 = $row['phone1'];
+		$this->phone2 = $row['phone2'];
+		$this->phone3 = $row['phone3'];
 		$this->longitude = $row['longitude'];
 		$this->latitude = $row['latitude'];
-		$this->image_path_1 = $row['image_path_1'];
-		$this->image_path_2 = $row['image_path_2'];
-		$this->image_path_3 = $row['image_path_3'];
+		$this->image_path_1 = $row['image1'];
+		$this->image_path_2 = $row['image2'];
+		$this->image_path_3 = $row['image3'];
 		$this->user_id = $row['user_id'];
 		$this->survey_status = $row['survey_status'];
 
@@ -277,10 +284,10 @@ class Survey {
 		$query = 'SELECT
 				`id`, `survey_id`, `question_id`, `answer`
 			FROM
-				`' . $this->table_question . '` 
-			WHERE 
+				`' . $this->table_question . '`
+			WHERE
 				`survey_id` = ?
-			ORDER BY 
+			ORDER BY
 				`question_id`;';
 
 		$stmt = $this->conn->prepare($query);
@@ -290,7 +297,7 @@ class Survey {
 		$qas_arr = array();
 		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			extract($row);
-			$qas = array( 
+			$qas = array(
 				'question_id' => $question_id,
 				'answer' => $answer
 				);
@@ -310,7 +317,7 @@ class Survey {
 				`owner_mm` = :owner_mm, `owner_en` = :owner_en,
 				`phone1` = :phone1, `phone2` = :phone2, `phone3` = :phone3,
 				`longitude` = :longitude, `latitude` = :latitude,
-				`image_path_1` = :image_path_1, `image_path_2` = :image_path_2, `image_path_3` = :image_path_3,
+				`image1` = :image_path_1, `image2` = :image2, `image3` = :image_path_3,
 				`updated_by` = :user_id, update_date = :updated_date
 				`survey_status` = :status
 			WHERE
@@ -331,12 +338,12 @@ class Survey {
         	$this->owner_en = htmlspecialchars(strip_tags($this->owner_en));
         	$this->phone1 = htmlspecialchars(strip_tags($this->phone1));
         	$this->phone2 = htmlspecialchars(strip_tags($this->phone2));
-        	$this->phone3 = htmlspecialchars(strip_tags($this->phone3));	
+        	$this->phone3 = htmlspecialchars(strip_tags($this->phone3));
         	$this->image_path_1 = htmlspecialchars(strip_tags($this->image_path_1));
         	$this->image_path_2 = htmlspecialchars(strip_tags($this->image_path_2));
         	$this->image_path_3 = htmlspecialchars(strip_tags($this->image_path_3));
-        
-        
+
+
         	// bind values
         	$stmt->bindParam(":area", $this->area, PDO::PARAM_STR);
         	$stmt->bindParam(":city_mm", $this->city_mm, PDO::PARAM_STR);
@@ -359,7 +366,7 @@ class Survey {
         	$stmt->bindParam(":image_path_2", $this->image_path_2, PDO::PARAM_STR);
         	$stmt->bindParam(":image_path_3", $this->image_path_3, PDO::PARAM_STR);
         	$stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_STR);
-        	$stmt->bindParam(":survey_status", $this->survey_status, PDO::PARAM_BOL);			
+        	$stmt->bindParam(":survey_status", $this->survey_status, PDO::PARAM_BOOL);
 		$stmt->bindParam(":id", $this->id);
 
 		if ($stmt->execute()) {
@@ -368,9 +375,9 @@ class Survey {
 					return true;
 				} else {
 					echo '<pre> <br/> Update Question Error <br/>';
-					return false;	
+					return false;
 				}
-			} 
+			}
 		} else {
 			echo '<pre> <br/>Update Survey Error<br/>';
 				print_r($stmt->errorInfo());

@@ -3,13 +3,14 @@ class User {
     private $conn;
 	private $table_name = 'user';
     private $table_role = 'role';
-    private $sysadmin = 'sysadmin';
+    private $surveyor = 'surveyor';
 
 	public $id;
 	public $name;
 	public $department;
 	public $position;
     public $role_id;
+    public $role_name;
     public $username;
     public $password;
     public $user_status;
@@ -48,9 +49,10 @@ class User {
 
 	function login() {
 		$query = 'SELECT
-				`id`, `name`, `department`, `position`, `role_id`, `username`, `password`, `user_status`
+				`'. $this->table_name .'`.`id`, `name`, `department`, `position`, `' . $this->table_name .  '`.`role_id`, `' . $this->table_role . '`.`role_name`, `username`, `password`, `user_status`
 			FROM
 			    `' . $this->table_name . '`
+            INNER JOIN `' . $this->table_role . '` ON `' . $this->table_name . '`.`role_id` = `' . $this->table_role . '`.`id`
 			WHERE
 				`username` = :username AND
 				`password` = :password AND
@@ -65,6 +67,7 @@ class User {
 			$this->department = $row['department'];
 			$this->position = $row["position"];
 			$this->role_id = $row['role_id'];
+			$this->role_name = $row['role_name'];
 			$this->username = $row['username'];
 			$this->password = $row['password'];
 			$this->user_status = $row['user_status'];
@@ -129,13 +132,13 @@ class User {
 				`role_status` = 1 ';
 
 		if ($this->issysadmin == false) {
-			$query .= ' AND `role_name`<> :sysadmin';
+			$query .= ' AND `role_name`= :surveyor';
 		}
         $query .=' ORDER BY
 		    `role_name`;';
 		$stmt = $this->conn->prepare($query);
 		if ($this->issysadmin==false) {
-			$stmt->bindParam(":sysadmin", $this->sysadmin, PDO::PARAM_STR);
+			$stmt->bindParam(":surveyor", $this->surveyor, PDO::PARAM_STR);
 		}
 		$stmt->execute();
 		return $stmt;
@@ -146,8 +149,9 @@ class User {
     	$query = 'SELECT
 				`id`,`name`, `department`, `position`, `role_id`, `username`, `password`, `user_status`
             FROM `' . $this->table_name .'`
-            WHERE `delete_status` = 0 and `role_id` =:role_id
-            ORDER BY `id` DESC;';
+            WHERE `delete_status` = 0 AND `role_id` =:role_id
+            ORDER BY
+                `id` Desc';
 		$stmt = $this->conn->prepare($query);
         $stmt->bindParam(":role_id", $this->role_id, PDO::PARAM_STR);
 		$stmt->execute();

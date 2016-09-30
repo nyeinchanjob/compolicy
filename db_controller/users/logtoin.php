@@ -17,18 +17,17 @@
 
 	$user->username = $data->username;
 	$user->password = $data->password;
-	
+
 	$user->login();
-	
+
 	$user_arr = array(
 		'id' => $user->id,
 		'name' => $user->name,
 		'department' => $user->department,
 		'position' => $user->position,
-		'role_id' => $user->role_id
+		'role_id' => $user->role_id,
+		'role_name' => $user->role_name
 	);
 
 	print_r(json_encode($user_arr));
 ?>
-
-

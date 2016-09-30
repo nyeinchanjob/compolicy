@@ -1,12 +1,50 @@
 var i = 0;
-var MyApp = angular.module('MyApp', ['ngMaterial', 'ngMessages', 'ngFileUpload']);
+var MyApp = angular.module('MyApp', ['ngMaterial', 'ngMessages', 'ngFileUpload', 'ngCookies', 'ui.router']);
+
+MyApp.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('home');
+    $stateProvider
+        .state('login', {
+            url : '/login',
+            templateUrl: 'templates/login/login.html',
+            controller: 'LoginCtrl'
+        })
+        .state('home', {
+            url : '/home',
+            templateUrl: 'templates/main.html',
+            controller: 'AppCtrl'
+        })
+        .state('survey', {
+            url : '/survey',
+            templateUrl: 'templates/surveys/survey_list.html',
+            controller: 'SurveyCtrl'
+        })
+        .state('report', {
+            url : '/report',
+            templateUrl: 'templates/reports/report_list.html'
+        })
+        .state('role', {
+            url : '/role',
+            templateUrl: 'templates/roles/role_list.html',
+            controller: 'RoleCtrl'
+        })
+        .state('user', {
+            url : '/user',
+            templateUrl: 'templates/users/user_list.html',
+            controller: 'UserCtrl'
+        })
+        .state('setup', {
+            url : '/setup',
+            templateUrl: 'templates/configs/config_list.html',
+            controller: 'ConfigCtrl'
+        });
+});
+
 
 MyApp.run(function ($rootScope) {
-    $rootScope.$on('scope.stored', function (event, data) {
-        console.log("scope.stored", data);
-    });
+    $rootScope.$on('scope.stored', function (event, data) { });
 });
-MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav) {
+MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $state, $cookies) {
     // $scope.deals = [
     //   { product_id:i, product_buy:0, product_get:0, product_disc:0}
     //   ];
@@ -19,16 +57,25 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav) {
     $scope.checked_index = [];
     $scope.checked_show = false;
     $scope.bundle_deals = [];
-    $rootScope.user_name = '';
-	//$scope.user_name = $rootScope.user_name;
-	$rootScope.role_id = '';
-    $rootScope.loginCorrect = false;
-    $scope.show_layout='survey_list';
-
+    $rootScope.user_name = $cookies.get('user_name') == undefined ? '' : $cookies.get('user_name');
+	$rootScope.role_id = $cookies.get('role_id') == undefined ? '' : $cookies.get('role_id');
+	$rootScope.role_name = $cookies.get('role_name') == undefined ? '' : $cookies.get('role_name');;
+    $rootScope.user_id = $cookies.get('user_id') == undefined ? '' : $cookies.get('user_id');
+    $rootScope.loginCorrect = $cookies.get('loginCorrect') == undefined ? false : $cookies.get('loginCorrect');
+    if ($cookies.get('loginCorrect') == undefined || $cookies.get('loginCorrect') == false) {
+        $state.go('login');
+    } else {
+        $state.go('home');
+    }
     $scope.toggleLeft = buildToggler('left');
 
     $scope.logout = function () {
       $rootScope.loginCorrect = false;
+      $cookies.remove('loginCorrect');
+      $cookies.remove('user_id');
+      $cookies.remove('role_name');
+      $cookies.remove('user_name');
+      $state.go('login');
       $mdSidenav('left').close()
     };
 

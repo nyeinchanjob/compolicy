@@ -19,7 +19,7 @@ header("Content-Type: application/json; charset=UTF-8");
 	$user->issysadmin = $para->issysadmin;
 	$role_list = $user->readAllRole();
 	$role_num = $role_list->rowCount();
-
+	
 	$data = '';
 	if($role_num>0) {
 		$x = 1;
@@ -41,8 +41,8 @@ header("Content-Type: application/json; charset=UTF-8");
 						$data .= '{';
 							$data .= '"id":"' . $id . '",';
 							$data .= '"name":"' . html_entity_decode($name) . '",';
-							$data .= '"role_id":"' . $data_id . '",';
-							$data .= '"role_name":"' . $user_role_name . '",';
+							$data .= '"role_id":"' . $role_id . '",';
+							$data .= '"role_name":"' . $role_name . '",';
 							$data .= '"user_status":"' . $user_status . '"';
 						$data .= '}';
 

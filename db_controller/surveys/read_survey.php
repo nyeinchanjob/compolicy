@@ -15,6 +15,9 @@ header("Content-Type: application/json; charset=UTF-8");
 		echo 'Unable to include survey file.';
 	}
 
+	$para = json_decode(file_get_contents('php://input'));
+	$survey->user_id = $para->user_id;
+	$survey->issysadmin = $para->issysadmin;
 	$stmt = $survey->readAll();
 	$num = $stmt->rowCount();
 
@@ -28,7 +31,7 @@ header("Content-Type: application/json; charset=UTF-8");
 				$data .= '"area":"' . $area . '",';
 				$data .= '"outlet_mm":"' . html_entity_decode($outlet_mm) . '",';
 				$data .= '"township_mm":"' . html_entity_decode($township_mm) . '",';
-				$data .= '"city_mm":"' . html_entity_decode($city_mm) . '"';
+				$data .= '"city_mm":"' . html_entity_decode($city_mm) . '",';
 				//$status = $survey_status == '1' ? 'Active' : 'Inactive';
 				$data .= '"survey_status":"' . $survey_status . '"';
 			$data .= '}';
