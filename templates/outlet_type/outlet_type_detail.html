@@ -1,0 +1,28 @@
+<md-dialog ng-cloak>
+  <form name="outlet_typeDetail">
+    <md-toolbar class="md-warn">
+      <div class="md-toolbar-tools">
+          <span class="md-title" flex>{{outlet_typeInfo.outlet_type_value == undefined ? 'Outlet Type' : outlet_typeInfo.outlet_type_value}} Detail</span>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content" layout="column" flex ng-init="loadConfig()">
+        <md-input-container class="md-block md-subheader" flex>
+          <label>Name</label>
+          <input required ng-model="outlet_typeInfo.outlet_type_name" name="outlet_type_name">
+          <div ng-messages="outlet_typeDetail.outlet_type_name.$error">
+          <div ng-message="required">This is required.</div></div>
+        </md-input-container>
+        <md-checkbox aria-label="outlet_type_active" name="outlet_type_status"
+        ng-model="outlet_typeInfo.outlet_type_status" ng-click="changeActive(outlet_typeInfo.outlet_type_status)">
+          Active
+        </md-checkbox>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex>&nbsp;</span>
+      <md-button ng-click="cancel();">Cancel</md-button>
+      <md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() ">{{buttonAction}}</md-button>
+    </md-dilaog-actions>
+  </form>
+</md-dialog>

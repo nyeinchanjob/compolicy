@@ -23,6 +23,16 @@ MyApp.config(function($stateProvider, $urlRouterProvider) {
             url : '/report',
             templateUrl: 'templates/reports/report_list.html'
         })
+        .state('outlet_type', {
+            url : '/outlet_type',
+            templateUrl: 'templates/outlet_type/outlet_type_list.html',
+            controller: 'OutletTypeCtrl'
+        })
+        .state('question_type', {
+            url : '/question_type',
+            templateUrl: 'templates/question_type/question_type_list.html',
+            controller: 'QuestionTypeCtrl'
+        })
         .state('role', {
             url : '/role',
             templateUrl: 'templates/roles/role_list.html',
@@ -57,12 +67,12 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
     $scope.checked_index = [];
     $scope.checked_show = false;
     $scope.bundle_deals = [];
-    $rootScope.user_name = $cookies.get('user_name') == undefined ? '' : $cookies.get('user_name');
-	$rootScope.role_id = $cookies.get('role_id') == undefined ? '' : $cookies.get('role_id');
-	$rootScope.role_name = $cookies.get('role_name') == undefined ? '' : $cookies.get('role_name');;
-    $rootScope.user_id = $cookies.get('user_id') == undefined ? '' : $cookies.get('user_id');
-    $rootScope.loginCorrect = $cookies.get('loginCorrect') == undefined ? false : $cookies.get('loginCorrect');
-    if ($cookies.get('loginCorrect') == undefined || $cookies.get('loginCorrect') == false) {
+    $rootScope.user_name = $cookies.get('user_name') === undefined ? '' : $cookies.get('user_name');
+	$rootScope.role_id = $cookies.get('role_id') === undefined ? '' : $cookies.get('role_id');
+	$rootScope.role_name = $cookies.get('role_name') === undefined ? '' : $cookies.get('role_name');
+    $rootScope.user_id = $cookies.get('user_id') === undefined ? '' : $cookies.get('user_id');
+    $rootScope.loginCorrect = $cookies.get('loginCorrect') === undefined ? false : $cookies.get('loginCorrect');
+    if ($cookies.get('loginCorrect') === undefined || $cookies.get('loginCorrect') === false) {
         $state.go('login');
     } else {
         $state.go('home');
@@ -76,14 +86,14 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
       $cookies.remove('role_name');
       $cookies.remove('user_name');
       $state.go('login');
-      $mdSidenav('left').close()
+      $mdSidenav('left').close();
     };
 
     function buildToggler(navID) {
-      return function() {
-        // Component lookup should always be available since we are not using `ng-if`
-        $mdSidenav(navID).toggle();
-      }
+        return function() {
+          // Component lookup should always be available since we are not using `ng-if`
+            $mdSidenav(navID).toggle();
+        };
     }
 
     $scope.isOpenLeft = function(){
@@ -91,7 +101,7 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
     };
 
     $scope.add = function () {
-      $scope.deals.push({product_id: i+1,product_buy:0, product_get:0, product_disc:0})
+      $scope.deals.push({product_id: i+1,product_buy:0, product_get:0, product_disc:0});
       i += 1;
     };
 
@@ -110,7 +120,7 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
           $scope.deals.splice($scope.deals.indexOf($scope.checked_index[j]),1);
         }
 
-        if ($scope.deals.length == 0) {
+        if ($scope.deals.length === 0) {
           i = 0;
           $scope.deals = [
             { product_id:i, product_buy:0, product_get:0, product_disc:0}
@@ -122,7 +132,7 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
     };
 
     $scope.showChecked = function () {
-      $scope.checked_show = $scope.checked_show == false ? true : false;
+      $scope.checked_show = $scope.checked_show === false ? true : false;
     };
 
     $scope.reset = function () {
@@ -139,7 +149,7 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
       $scope.bundle_deals = [];
       $scope.deals = check_deals_zero($scope.deals);
       if ($scope.deals.length > 0) {
-          $scope.bundle_deals = calculate_deals($scope.deals, parseInt($scope.deals[0]['product_buy']), parseInt($scope.deals[0]['product_get']), parseInt($scope.deals[0]['product_disc']));
+          $scope.bundle_deals = calculate_deals($scope.deals, parseInt($scope.deals[0].product_buy), parseInt($scope.deals[0].product_get), parseInt($scope.deals[0].product_disc));
       }
     };
 
@@ -169,13 +179,13 @@ MyApp.controller('AppCtrl', function($scope, $rootScope, Scopes, $mdSidenav, $st
 function check_deals_zero (deals) {
   bundle = [];
   for (var i = 0; i < deals.length; i++) {
-    if (deals[i]['product_buy'] > 0 && deals[i]['product_get'] > 0) {
+    if (deals[i].product_buy > 0 && deals[i].product_get > 0) {
       bundle.push({
-        'product_id': deals[i]['product_id'],
-        'product_buy': deals[i]['product_buy'],
-        'product_get': deals[i]['product_get'],
-        'product_disc': deals[i]['product_disc'],
-      })
+        'product_id': deals[i].product_id,
+        'product_buy': deals[i].product_buy,
+        'product_get': deals[i].product_get,
+        'product_disc': deals[i].product_disc,
+    });
     }
   }
   return bundle;
@@ -188,18 +198,18 @@ function calculate_deals (deals, deals_count,inc_qty, inc_disc) {
     deals_qty = 0;
     deals_disc = 0;
     last_buy_count = 2;
-    for (var i = deals_count; i < (deals[deals.length-1]['product_buy']*2) +1; i+=deals_count) {
+    for (var i = deals_count; i < (deals[deals.length-1].product_buy*2) +1; i+=deals_count) {
       if (di <= deals.length -1) {
-        if (i == parseInt(deals[di]['product_buy']) ) {
-          deals_qty = parseInt(deals[di]['product_get']);
-          deals_disc = parseInt(deals[di]['product_disc']);
+        if (i == parseInt(deals[di].product_buy) ) {
+          deals_qty = parseInt(deals[di].product_get);
+          deals_disc = parseInt(deals[di].product_disc);
           // di = (di < deals.length -1) ? di +=1 : deals.length -1;
           di +=1;
           bundle.push({'product_id': prod_i, 'min': i, 'max': (i + deals_count)-1, 'free': deals_qty, 'disc': deals_disc});
         } else {
-          if (parseInt(i) == parseInt(deals[di-1]['product_buy'])*2) {
-            deals_qty = parseInt(deals[di-1]['product_get'])*2;
-            deals_disc = parseInt(deals[di-1]['product_disc'])*2;
+          if (parseInt(i) == parseInt(deals[di-1].product_buy)*2) {
+            deals_qty = parseInt(deals[di-1].product_get)*2;
+            deals_disc = parseInt(deals[di-1].product_disc)*2;
 
             bundle.push({'product_id': prod_i, 'min': i, 'max': (i + deals_count)-1, 'free': deals_qty, 'disc': deals_disc});
           } else {
@@ -209,15 +219,15 @@ function calculate_deals (deals, deals_count,inc_qty, inc_disc) {
           }
         }
         if (di <= deals.length-1) {
-          if (parseInt((i + deals_count) -1) > parseInt(deals[di]['product_buy'])) {
-             bundle[bundle.length-1]['max'] =  parseInt(deals[di]['product_buy']) -1;
-            i = parseInt(deals[di]['product_buy']) - parseInt(deals_count);
+          if (parseInt((i + deals_count) -1) > parseInt(deals[di].product_buy)) {
+             bundle[bundle.length-1].max =  parseInt(deals[di].product_buy) -1;
+            i = parseInt(deals[di].product_buy) - parseInt(deals_count);
           }
         }
       } else {
-        if (parseInt(i) == parseInt(deals[deals.length -1]['product_buy'])*last_buy_count) {
-          deals_qty = parseInt(deals[deals.length -1]['product_get'])*last_buy_count;
-          deals_disc = parseInt(deals[deals.length -1]['product_disc'])*last_buy_count;
+        if (parseInt(i) == parseInt(deals[deals.length -1].product_buy)*last_buy_count) {
+          deals_qty = parseInt(deals[deals.length -1].product_get)*last_buy_count;
+          deals_disc = parseInt(deals[deals.length -1].product_disc)*last_buy_count;
           bundle.push({'product_id': prod_i, 'min': i, 'max': (i + deals_count)-1, 'free': deals_qty, 'disc': deals_disc});
         } else {
           deals_qty += inc_qty;
@@ -228,4 +238,4 @@ function calculate_deals (deals, deals_count,inc_qty, inc_disc) {
       prod_i +=1;
     }
     return bundle;
-  };
+  }

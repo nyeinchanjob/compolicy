@@ -317,7 +317,7 @@ class Survey {
 				`owner_mm` = :owner_mm, `owner_en` = :owner_en,
 				`phone1` = :phone1, `phone2` = :phone2, `phone3` = :phone3,
 				`longitude` = :longitude, `latitude` = :latitude,
-				`image1` = :image_path_1, `image2` = :image2, `image3` = :image_path_3,
+				`image1` = :image_path_1, `image2` = :image_path_2, `image3` = :image_path_3,
 				`updated_by` = :user_id, update_date = :updated_date
 				`survey_status` = :status
 			WHERE
@@ -325,48 +325,49 @@ class Survey {
 
 		$stmt = $this->conn->prepare($query);
 		// bind values
-        	$this->area = htmlspecialchars(strip_tags($this->area));
-        	$this->city_mm = htmlspecialchars(strip_tags($this->city_mm));
-        	$this->city_en = htmlspecialchars(strip_tags($this->city_en));
-        	$this->township_mm = htmlspecialchars(strip_tags($this->township_mm));
-        	$this->township_en = htmlspecialchars(strip_tags($this->township_en));
-        	$this->ward_mm = htmlspecialchars(strip_tags($this->ward_mm));
-        	$this->ward_en = htmlspecialchars(strip_tags($this->ward_en));
-        	$this->outlet_mm = htmlspecialchars(strip_tags($this->outlet_mm));
-        	$this->outlet_en = htmlspecialchars(strip_tags($this->outlet_en));
-        	$this->owner_mm = htmlspecialchars(strip_tags($this->owner_mm));
-        	$this->owner_en = htmlspecialchars(strip_tags($this->owner_en));
-        	$this->phone1 = htmlspecialchars(strip_tags($this->phone1));
-        	$this->phone2 = htmlspecialchars(strip_tags($this->phone2));
-        	$this->phone3 = htmlspecialchars(strip_tags($this->phone3));
-        	$this->image_path_1 = htmlspecialchars(strip_tags($this->image_path_1));
-        	$this->image_path_2 = htmlspecialchars(strip_tags($this->image_path_2));
-        	$this->image_path_3 = htmlspecialchars(strip_tags($this->image_path_3));
+		$this->area = htmlspecialchars(strip_tags($this->area));
+		$this->city_mm = htmlspecialchars(strip_tags($this->city_mm));
+		$this->city_en = htmlspecialchars(strip_tags($this->city_en));
+		$this->township_mm = htmlspecialchars(strip_tags($this->township_mm));
+		$this->township_en = htmlspecialchars(strip_tags($this->township_en));
+		$this->ward_mm = htmlspecialchars(strip_tags($this->ward_mm));
+		$this->ward_en = htmlspecialchars(strip_tags($this->ward_en));
+		$this->outlet_mm = htmlspecialchars(strip_tags($this->outlet_mm));
+		$this->outlet_en = htmlspecialchars(strip_tags($this->outlet_en));
+		$this->owner_mm = htmlspecialchars(strip_tags($this->owner_mm));
+		$this->owner_en = htmlspecialchars(strip_tags($this->owner_en));
+		$this->phone1 = htmlspecialchars(strip_tags($this->phone1));
+		$this->phone2 = htmlspecialchars(strip_tags($this->phone2));
+		$this->phone3 = htmlspecialchars(strip_tags($this->phone3));
+		$this->image_path_1 = htmlspecialchars(strip_tags($this->image_path_1));
+		$this->image_path_2 = htmlspecialchars(strip_tags($this->image_path_2));
+		$this->image_path_3 = htmlspecialchars(strip_tags($this->image_path_3));
 
 
-        	// bind values
-        	$stmt->bindParam(":area", $this->area, PDO::PARAM_STR);
-        	$stmt->bindParam(":city_mm", $this->city_mm, PDO::PARAM_STR);
-        	$stmt->bindParam(":city_en", $this->city_en, PDO::PARAM_STR);
-        	$stmt->bindParam(":township_mm", $this->township_mm, PDO::PARAM_STR);
-        	$stmt->bindParam(":township_en", $this->township_en, PDO::PARAM_STR);
-        	$stmt->bindParam(":ward_mm", $this->ward_mm, PDO::PARAM_STR);
-        	$stmt->bindParam(":ward_en", $this->ward_en, PDO::PARAM_STR);
-        	$stmt->bindParam(":outlet_type", $this->outlet_type, PDO::PARAM_INT);
-        	$stmt->bindParam(":outlet_mm", $this->outlet_mm, PDO::PARAM_STR);
-        	$stmt->bindParam(":outlet_en", $this->outlet_en, PDO::PARAM_STR);
-        	$stmt->bindParam(":owner_mm", $this->owner_mm, PDO::PARAM_STR);
-        	$stmt->bindParam(":owner_en", $this->owner_en, PDO::PARAM_STR);
-        	$stmt->bindParam(":phone1", $this->phone1, PDO::PARAM_STR);
-        	$stmt->bindParam(":phone2", $this->phone2, PDO::PARAM_STR);
-        	$stmt->bindParam(":phone3", $this->phone3, PDO::PARAM_STR);
-        	$stmt->bindParam(":longitude", $this->longitude, PDO::PARAM_STR);
-        	$stmt->bindParam(":latitude", $this->latitude, PDO::PARAM_STR);
-        	$stmt->bindParam(":image_path_1", $this->image_path_1, PDO::PARAM_STR);
-        	$stmt->bindParam(":image_path_2", $this->image_path_2, PDO::PARAM_STR);
-        	$stmt->bindParam(":image_path_3", $this->image_path_3, PDO::PARAM_STR);
-        	$stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_STR);
-        	$stmt->bindParam(":survey_status", $this->survey_status, PDO::PARAM_BOOL);
+	// bind values
+		$stmt->bindParam(":area", $this->area, PDO::PARAM_STR);
+		$stmt->bindParam(":city_mm", $this->city_mm, PDO::PARAM_STR);
+		$stmt->bindParam(":city_en", $this->city_en, PDO::PARAM_STR);
+		$stmt->bindParam(":township_mm", $this->township_mm, PDO::PARAM_STR);
+		$stmt->bindParam(":township_en", $this->township_en, PDO::PARAM_STR);
+		$stmt->bindParam(":ward_mm", $this->ward_mm, PDO::PARAM_STR);
+		$stmt->bindParam(":ward_en", $this->ward_en, PDO::PARAM_STR);
+		$stmt->bindParam(":outlet_type", $this->outlet_type, PDO::PARAM_INT);
+		$stmt->bindParam(":outlet_mm", $this->outlet_mm, PDO::PARAM_STR);
+		$stmt->bindParam(":outlet_en", $this->outlet_en, PDO::PARAM_STR);
+		$stmt->bindParam(":owner_mm", $this->owner_mm, PDO::PARAM_STR);
+		$stmt->bindParam(":owner_en", $this->owner_en, PDO::PARAM_STR);
+		$stmt->bindParam(":phone1", $this->phone1, PDO::PARAM_STR);
+		$stmt->bindParam(":phone2", $this->phone2, PDO::PARAM_STR);
+		$stmt->bindParam(":phone3", $this->phone3, PDO::PARAM_STR);
+		$stmt->bindParam(":longitude", $this->longitude, PDO::PARAM_STR);
+		$stmt->bindParam(":latitude", $this->latitude, PDO::PARAM_STR);
+		$stmt->bindParam(":image_path_1", $this->image_path_1, PDO::PARAM_STR);
+		$stmt->bindParam(":image_path_2", $this->image_path_2, PDO::PARAM_STR);
+		$stmt->bindParam(":image_path_3", $this->image_path_3, PDO::PARAM_STR);
+		$stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_STR);
+		$stmt->bindParam(":survey_status", $this->survey_status, PDO::PARAM_BOOL);
+
 		$stmt->bindParam(":id", $this->id);
 
 		if ($stmt->execute()) {

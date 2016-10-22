@@ -33,7 +33,7 @@
         				</md-content>
         				<md-card-action layout="row" layout-align="start center">
           					<md-input-container flex>
-            						<input id="file1" aria-label="image1" type="file" name="file1" onchange="angular.element(this).scope().photoChanged(this.files, 'file1')" ng-files ="getTheFiles($files, 'file1')" />
+            						<input id="file1" aria-label="image1" type="file" name="file1" onchange="angular.element(this).scope().photoChanged(this.files, 'file1')" ng-files ="getTheFiles($files, 'file1')" accept="image/*">
           					</md-input-container>
         				</md-card-action>
       				</md-card>
@@ -50,7 +50,7 @@
 			</md-content>
 			<md-card-action layout="row" layout-align="start center">
 				<md-input-container flex>
-					<input id="file2" aria-label="image2" type="file" name="file2" onchange="angular.element(this).scope().photoChanged(this.files, 'file2')" ng-files="getTheFiles($files, 'file2')"/>
+					<input id="file2" aria-label="image2" type="file" name="file2" onchange="angular.element(this).scope().photoChanged(this.files, 'file2')" ng-files="getTheFiles($files, 'file2') " accept="image/*">
 				</md-input-container>
 			</md-card-action>
 		</md-card>
@@ -67,7 +67,7 @@
 			</md-content>
 			<md-card-action layout="row" layout-align="start center">
 				<md-input-container flex>
-					<input id="file3" aria-label="image3" type="file" name="file3" onchange="angular.element(this).scope().photoChanged(this.files, 'file3')" ng-files="getTheFiles($files, 'file3')"/>
+					<input id="file3" aria-label="image3" type="file" name="file3" onchange="angular.element(this).scope().photoChanged(this.files, 'file3')" ng-files="getTheFiles($files, 'file3')" accept="image/*">
 				</md-input-container>
 			</md-card-action>
 		</md-card>

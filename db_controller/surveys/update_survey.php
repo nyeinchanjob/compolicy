@@ -7,8 +7,8 @@
 		echo 'Unable to include database file.';
 	}
 
-	if(file_exists("survery.php") && include_once("survery.php") ){
-		$survery = new Survery($db);
+	if(file_exists("survey.php") && include_once("survey.php") ){
+		$survey = new Survey($db);
 	} else {
 		echo 'Unable to include survery file.';
 	}
@@ -35,13 +35,13 @@
         $survey->image_path_1 = $data->image_path_1;
         $survey->image_path_2 = $data->image_path_2;
         $survey->image_path_3 = $data->image_path_3;
-        $survey->user_id = $data->user_id
+        $survey->user_id = $data->user_id;
         $survey->survey_status = $data->survey_status;
         $survey->questions = $data->answers;
 
-	if ($survery->update()) {
-		echo 'Survery was updated.';
+	if ($survey->update()) {
+		echo 'Survey was updated.';
 	} else {
-		echo 'Unable to update survery';
+		echo 'Unable to update survey';
 	}
 ?>

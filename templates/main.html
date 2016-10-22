@@ -1,3 +1,35 @@
 <md-content flex layout-fill ng-controller="AppCtrl" layout="column" ng-cloak="" class="body-color container">
+    <div layout="row">
+        <div flex>
+            &nbsp;
+        </div>
+        <div flex-xs flex-gt-xs="35" layout="column">
+            <md-card>
+                <img ng-src="img/coca-cola_strip_phone.png" class="md-card-image" alt="Washed Out">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Myanmar Outlet Survey System</span>
+                        <span class="md-subhead">ကိုကာ-ကိုလာ ပင်းယ ဗားဗရေ့ချ်စ် မြန်မာ လီမိတက်</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-divider></md-divider>
+                <md-card-content >
+                    <div layout="column" layout-align="center center">
+                        <h4>အရသာကို ခံစားကြည့်ပါ။&#8482;</h4>
+                    </div>
+                </md-card-content>
+                <md-card-actions layout="row" layout-align="end center">
+                    <span>Copyright&#169; CCPBM</span>
+                    <span flex>&nbsp;</span>
+                    <div layout="row" layout-align="start center">
+                        <!-- <span>{{=T('Powered by')}}</span><md-button class="md-primary" ng-href="http://www.web2py.com/" target="_blank">Web2py</md-button> -->
+                    </div>
+                </md-card-actions>
+            </md-card>
+        </div>
+        <div flex>
+            &nbsp;
+        </div>
+    </div>
     <div layout-fill class="body-color container" ng-show="!$root.loginCorrect"></div>
 </md-content>

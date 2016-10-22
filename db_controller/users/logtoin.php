@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
 	if(file_exists('../../config/database.php') && include_once('../../config/database.php') ){
 
 		$database = new Database();
@@ -26,6 +28,8 @@
 		'department' => $user->department,
 		'position' => $user->position,
 		'role_id' => $user->role_id,
+		'username' => $user->username,
+		'password' => $user->password,
 		'role_name' => $user->role_name
 	);
 

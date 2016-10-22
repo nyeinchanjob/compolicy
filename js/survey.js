@@ -4,8 +4,8 @@ MyApp.run(function ($rootScope){
 	$rootScope.$on('scope.stored', function (event, data){});
 });
 
-MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$rootScope', '$timeout', '$mdToast', 'Scopes', function(
-	$scope, $mdDialog, $http, Upload, $rootScope, $timeout, $mdToast, Scopes) {
+MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileUpload', '$rootScope', '$timeout', '$mdToast', 'Scopes', function(
+	$scope, $mdDialog, $http, Upload, fileUpload, $rootScope, $timeout, $mdToast, Scopes) {
 		Scopes.store('surveyScopes', $scope);
 
 		$scope.cbValue = {};
@@ -73,6 +73,14 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 			file1 = undefined;
 			file2 = undefined;
 			file3 = undefined;
+
+			$scope.show_layout = "survey_info";
+			$scope.show_save = false;
+			$scope.show_previous = false;
+			$scope.show_next = true;
+			$scope.detailTitle = '၏ အချက်အလက်များ'
+
+			$scope.buttonAction = $scope.action == 'new' ? 'save' : 'update'
 		};
 
 		$scope.showProductDetail = function() {
@@ -164,13 +172,15 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 						$scope.getAll();
 					});
 
-				if (file1 != undefined) {
-					var $f1 = file1;
-					Upload.upload({
-						url : 'img/outlet/',
-						file: $f1,
-						progress : function(e){}
-					}).then(function(data, status, headers, config) {});
+				if (file1) {
+					// file1.upload = Upload.upload({
+					// 	url : 'img/outlet',
+					// 	data: {file:file1},
+					// 	progress : function(e){}
+					// }).then(function(data, status, headers, config) {
+					// 	console.log(data);
+					// });
+					fileUpload.uploadFileToUrl(file1, 'img');
 				}
 
 				if (file2 != undefined) {
@@ -179,7 +189,9 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 						url : 'img/outlet/',
 						file : $f2,
 						progress : function(e){}
-					}).then(function(data, status, headers, config){});
+					}).then(function(data, status, headers, config){
+						console.log(data);
+					});
 
 				}
 
@@ -189,7 +201,9 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 						url : 'img/outlet/',
 						file: $f3,
 						progress : function(e){}
-					}).then(function(data, status, headers, config){});
+					}).then(function(data, status, headers, config){
+						console.log(data);
+					});
 				}
 
 			} else {
@@ -380,17 +394,17 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 
 	$scope.photoChanged = function(files, file_name){
 		if (files != null) {
-			switch(file_name) {
-				case "file1":
-					file1 = files[0];
-					break;
-				case "file2":
-					file2 = files[0];
-					break;
-				case "file3":
-					file3 = files[0];
-					break;
-			}
+			// switch(file_name) {
+			// 	case "file1":
+			// 		file1 = files[0];
+			// 		break;
+			// 	case "file2":
+			// 		file2 = files[0];
+			// 		break;
+			// 	case "file3":
+			// 		file3 = files[0];
+			// 		break;
+			// }
 			var file = files[0];
 			if ($scope.fileReaderSupported && file.type.indexOf('image') > -1) {
 				$timeout(function() {
@@ -401,16 +415,19 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 							switch(file_name) {
 								case "file1":
 									$scope.outletInfo.image_path_1 = e.target.result;
+									file1 = e.target.result;
 									var filename = document.getElementById('file1').value.split('\\');
 									$scope.file1name = filename[filename.length-1];
 									break;
 								case "file2":
 									$scope.outletInfo.image_path_2 = e.target.result;
+									file2 = e.target.result;
 									var filename = document.getElementById('file2').value.split('\\');
 									$scope.file2name = filename[filename.length-1];
 									break;
 								case "file3":
 									$scope.outletInfo.image_path_3 = e.target.result;
+									file3 = e.target.result;
 									var filename = document.getElementById('file3').value.split('\\');
 									$scope.file3name = filename[filename.length-1];
 									break;
@@ -496,29 +513,54 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', '$root
 
 }]);
 
-MyApp.directive('ngFiles', ['$parse', function ($parse) {
-	function fn_link (scope, element, attrs) {
-		var onChange = $parse(attrs.ngFiles);
-		element.on('change', function(event) {
-			onChange(scope, { $files: event.target.files });
-		});
-	};
-
-	return {
-		link: fn_link
-	}
-}]);
+//your directive
+MyApp.directive("fileread", [
+  function() {
+    return {
+      scope: {
+        fileread: "="
+      },
+      link: function(scope, element, attributes) {
+        element.bind("change", function(changeEvent) {
+          var reader = new FileReader();
+          reader.onload = function(loadEvent) {
+            scope.$apply(function() {
+              scope.fileread = loadEvent.target.result;
+            });
+          }
+          reader.readAsDataURL(changeEvent.target.files[0]);
+        });
+      }
+    }
+  }
+]);
 
 MyApp.service('fileUpload', ['$http', function ($http) {
 	this.uploadFileToUrl = function(file, uploadUrl){
 		var fd = new FormData();
-		fd.append('file', file);
+		var imgBlob = dataURItoBlob(file);
+		fd.append('file', imgBlob);
 
 		$http.post(uploadUrl, fd, {
 			transformRequest: angular.identity,
 			headers: {'Content-Type': undefined}
-		}).success(function(){
-		}).error(function(){
+		}).success(function(response){
+			console.log(response);
+		}).error(function(response){
+			console.log(response);
 		});
 	}
 }]);
+
+//you need this function to convert the dataURI
+function dataURItoBlob(dataURI) {
+  var binary = atob(dataURI.split(',')[1]);
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  var array = [];
+  for (var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  return new Blob([new Uint8Array(array)], {
+    type: mimeString
+  });
+}
