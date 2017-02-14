@@ -47,7 +47,7 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$root
 			'issysadmin':$scope.role_name != 'surveyor' ? true : false
 		}).success(function(
 			response) {
-			$scope.items = response.records
+			$scope.items = response.records;
 		});
 	};
 
@@ -84,30 +84,30 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$root
 			list.push(item);
 		}
 		$scope.cbValue.cbselect_edit = list.length > 0 ? true : false;
-	}
+	};
 
 	$scope.exists = function(item, list) {
 		if (list.length > 0) {
 			return list.indexOf(item) > -1;
 		}
-	}
+	};
 
 	$scope.isChecked = function() {
-		if ($scope.items != undefined) {
+		if ($scope.items !== undefined) {
 			return ($scope.cbselected.length === $scope.items.length);
 		}
-	}
+	};
 	$scope.isIndeterminate = function() {
 		return ($scope.cbselected.length !== 0 &&
 			$scope.cbselected.length !== $scope.items.length);
-	}
+	};
 	$scope.selectAll = function() {
 		if ($scope.cbselected.length === $scope.items.length) {
 			$scope.cbselected = [];
 		} else if ($scope.cbselected.length === 0 ||
 			$scope.cbselected.length > 0) {
 			for (var i = 0; i < $scope.items.length; i++) {
-				$scope.cbselected.push($scope.items[i]['id']);
+				$scope.cbselected.push($scope.items[i].id);
 			}
 		}
 		$scope.cbValue.cbselect_edit = $scope.cbselected.length > 0 ? true :
@@ -119,7 +119,7 @@ MyApp.controller('UserCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$root
 MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 	$mdToast, id, action) {
 
-	if (id != undefined) {
+	if (id !== undefined) {
 		$http.post('db_controller/users/read_role.php', {
       				'issysadmin': $scope.role_id == '1' ? true : false
         		}).success(function(response) {
@@ -129,19 +129,19 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 			'id': id
 		}).success(function(data, status, headers, user) {
 			$scope.userInfo = {
-				id : data[0]['id'],
-				name : data[0]['name'],
-				department : data[0]['department'],
-				position : data[0]['position'],
-				role_id : data[0]['role_id'],
-				username : data[0]['username'],
+				id : data[0].id,
+				name : data[0].name,
+				department : data[0].department,
+				position : data[0].position,
+				role_id : data[0].role_id,
+				username : data[0].username,
 				password : undefined,//data[0]['password'],
 				confirmPassword : undefined,
-				user_status: data[0]['user_status'] == '1' ? true : false
+				user_status: data[0].user_status == '1' ? true : false
 			};
-			$scope.org_name = data[0]['name'];
-			$scope.org_username = data[0]['username'];
-			$scope.org_password = data[0]['password'];
+			$scope.org_name = data[0].name;
+			$scope.org_username = data[0].username;
+			$scope.org_password = data[0].password;
 			$scope.divpassword = false;
 			$scope.divcheckpassword = true;
 			$scope.org_confirm_password = undefined;
@@ -177,7 +177,7 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 			password : undefined,
 			confirmPassword : undefined,
 			user_status: true
-		}
+		};
 		$scope.org_confirm_password = undefined;
 		$scope.role_id = '';
 		$scope.org_name = '';
@@ -189,7 +189,7 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 	};
 
 	$scope.letmechange = function() {
-		if ($scope.org_confirm_password != undefined) {
+		if ($scope.org_confirm_password !== undefined) {
 			if ($scope.org_confirm_password == $scope.org_password) {
 				$scope.divpassword = true;
 				$scope.divcheckpassword = false;
@@ -217,8 +217,8 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 	};
 
 	$scope.create = function() {
-		if ($scope.userInfo.username != undefined &&
-			$scope.userInfo.name != undefined) {
+		if ($scope.userInfo.username !== undefined &&
+			$scope.userInfo.name !== undefined) {
 			$scope.checkAndSave();
 		} else {
 			$mdToast.show(
@@ -234,11 +234,11 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 		$http.post('db_controller/users/check_user.php', {
 			'name': $scope.userInfo.name
 		}).success(function(data, status, headers, user) {
-			if (Object.keys(data).length == 0) {
+			if (Object.keys(data).length === 0) {
 				$http.post('db_controller/users/check_login.php', {
 					'username' : $scope.userInfo.username
 				}).success(function(data, status, headers, user) {
-					if (Object.keys(data).length ==0) {
+					if (Object.keys(data).length === 0) {
 						$scope.save();
 					} else {
 						$mdToast.show(
@@ -289,8 +289,8 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 	};
 
 	$scope.update = function() {
-		if ($scope.userInfo.name != undefined &&
-				$scope.userInfo.username != undefined) {
+		if ($scope.userInfo.name !== undefined &&
+				$scope.userInfo.username !== undefined) {
 			if ($scope.org_name != $scope.userInfo.name &&
 					$scope.org_user_name != $scope.userInfo.username) {
 					$scope.checkAndUpdate();
@@ -311,11 +311,11 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 		$http.post('db_controller/users/check_user.php', {
 			'name': $scope.userInfo.name
 		}).success(function(data, status, headers, user) {
-			if (Object.keys(data).length == 0) {
+			if (Object.keys(data).length === 0) {
 				$http.post('db_controller/users/check_login.php', {
 					'username' : $scope.userInfo.username
 				}).success(function(data, status, headers, user) {
-					if (Object.keys(data).length == 0) {
+					if (Object.keys(data).length === 0) {
 						$scope.edit();
 					} else {
 
@@ -331,7 +331,7 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 					);
 			}
 		});
-	}
+	};
 
 	$scope.edit = function() {
 		$http.post('db_controller/users/update_user.php', {
@@ -357,14 +357,14 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 			$scope.getAll();
 			$mdDialog.cancel();
 		});
-	}
+	};
 
 	$scope.getAll = function() {
 		$http.get('db_controller/users/read_user.php', {
 			'issysadmin':$scope.role_id == '1' ? true : false
 		}).success(function(
 			response) {
-			$scope.items = response.records
+			$scope.items = response.records;
 		});
 	};
 
@@ -374,5 +374,5 @@ MyApp.controller('UserDialogCtrl',function($scope, $http, $mdDialog,
 		} else {
 			return false;
 		}
-	}
+	};
 });

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <md-content flex md-scroll-y class="md-padding dark-body-color">
 	<form name="outletQuestion">
 		<div flex ng-cloak="" ng-repeat="question in questions" class="dark-body-color">
@@ -8,7 +9,7 @@
 					<input type="number" min="0" max="999999" ng-model="question.answer"  ng-value="question.answer" ng-change="AddToAnswer(question, answers);">
 					<div class="hint">Answer with only english digit numbers (0 ~ 9).</div>
 				</md-input-container>
-				
+
 			</md-card>
 		</div>
 	</form>

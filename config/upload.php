@@ -1,7 +1,7 @@
-<?php 
-header('Access-Control-Allow-Origin: *'); 
-$dirname = "../friends/".trim($_POST['value1']); 
-$ran = $_POST['value2']."_".rand();  
+<?php
+header('Access-Control-Allow-Origin: *');
+$dirname = "../friends/".trim($_POST['value1']);
+$ran = $_POST['value2']."_".rand();
 // If uploading file
 if ($_FILES) {
     print_r($_FILES);
@@ -52,11 +52,11 @@ if ($_FILES) {
     $images = scandir($dirname."/".$nomeCart);
     $ignore = Array(".", "..");
     if ($images) { ?>
-        <? foreach($images as $curimg){ 
+        <? foreach($images as $curimg){
             if (!in_array($curimg, $ignore)) { ?>
 <div id="<? echo $curimg ?>" style="margin:2px; border-radius:4px; border:#F90 solid 1px;background-image:url(http://www.mimanchitu.it/public/friends/<? echo $nomeCart."/".$curimg ?>);background-size:130% auto"><img src="http://www.mimanchitu.it/images/spacer.gif" width="100%" height="80px" /></div>
 <? }
         };
-    }
-    else {echo "Non hai immagini!";}
-}?>
+    } else {echo "Non hai immagini!";}
+}
+?>

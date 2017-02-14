@@ -12,14 +12,14 @@ MyApp.controller('LoginCtrl', ['$scope', '$http', '$rootScope', 'Scopes',
 				'username' : $scope.username,
 				'password' : $scope.password
 		}).success(function(data, status, headers, config) {
-			if(Object.keys(data).length>0 && data['id'] != null) {
+			if(Object.keys(data).length>0 && data.id !== null) {
 				$scope.userInfo = {
-					id : data['id'],
-					name : data['name'],
-					department : data['department'],
-					position  : data['position'],
-					role_id : data['role_id'],
-					role_name : data['role_name']
+					id : data.id,
+					name : data.name,
+					department : data.department,
+					position  : data.position,
+					role_id : data.role_id,
+					role_name : data.role_name
 				};
 				$rootScope.user_id = $scope.userInfo.id;
 				$rootScope.user_name = $scope.userInfo.name;

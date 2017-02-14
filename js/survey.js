@@ -9,7 +9,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 		Scopes.store('surveyScopes', $scope);
 
 		$scope.cbValue = {};
-		$scope.cbValue.cbselect_all = false
+		$scope.cbValue.cbselect_all = false;
 		$scope.cbValue.cbselect_edit = false;
 		$scope.show_detail = false;
 		$scope.show_layout='survey_info';
@@ -78,9 +78,9 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 			$scope.show_save = false;
 			$scope.show_previous = false;
 			$scope.show_next = true;
-			$scope.detailTitle = '၏ အချက်အလက်များ'
+			$scope.detailTitle = '၏ အချက်အလက်များ';
 
-			$scope.buttonAction = $scope.action == 'new' ? 'save' : 'update'
+			$scope.buttonAction = $scope.action == 'new' ? 'save' : 'update';
 		};
 
 		$scope.showProductDetail = function() {
@@ -108,19 +108,19 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 				'id': id
 			}).success(function(data, status, headers, config) {
 				$scope.outletInfo = {
-					id : data[0]['id'],
-					area : data[0]['area'],
-					city_mm : data[0]['city_mm'], city_en : data[0]['city_en'],
-					township_mm : data[0]['township_mm'], township_en : data[0]['township_en'],
-					ward_mm : data[0]['ward_mm'], ward_en : data[0]['ward_en'],
-					outlet_type :data[0]['outlet_type'],
-					outlet_mm : data[0]['outlet_mm'], outlet_en : data[0]['outlet_en'],
-					owner_mm : data[0]['owner_mm'], owner_en : data[0]['owner_en'],
-					phone1 : data[0]['phone1'], phone2 : data[0]['phone2'], phone3 : data[0]['phone3'],
-					survey_status : data[0]['survey_status'] == '1' ? true : false,
-					longitude : data[0]['longitude'], latitude : data[0]['latitude'],
-					image_path_1 : data[0]['image_path_1'], image_path_2 : data[0]['image_path_2'], image_path_3 : data[0]['image_path_3'],
-					user_id : data[0]['user_id']
+					id : data[0].id,
+					area : data[0].area,
+					city_mm : data[0].city_mm, city_en : data[0].city_en,
+					township_mm : data[0].township_mm, township_en : data[0].township_en,
+					ward_mm : data[0].ward_mm, ward_en : data[0].ward_en,
+					outlet_type :data[0].outlet_type,
+					outlet_mm : data[0].outlet_mm, outlet_en : data[0].outlet_en,
+					owner_mm : data[0].owner_mm, owner_en : data[0].owner_en,
+					phone1 : data[0].phone1, phone2 : data[0].phone2, phone3 : data[0].phone3,
+					survey_status : data[0].survey_status === '1' ? true : false,
+					longitude : data[0].longitude, latitude : data[0].latitude,
+					image_path_1 : data[0].image_path_1, image_path_2 : data[0].image_path_2, image_path_3 : data[0].image_path_3,
+					user_id : data[0].user_id
 				};
 
 				$scope.geo_path = "https://maps.googleapis.com/maps/api/staticmap?center=" + $scope.outletInfo.latitude + "," +
@@ -130,10 +130,10 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 					'id' : id
 				}).success(function(data, status, headers, config) {
 
-					for (var i = 0; i < Object.keys(data[0]['answers']).length; i++) {
+					for (var i = 0; i < Object.keys(data[0].answers).length; i++) {
 						for (var j = 0; j < $scope.questions.length; j++) {
-							if (data[0]['answers'][i]['question_id']==$scope.questions[j]['config_id']) {
-								$scope.questions[j]['answer'] = parseInt(data[0]['answers'][i]['answer']);
+							if (data[0].answers[i].question_id==$scope.questions[j].config_id) {
+								$scope.questions[j].answer = parseInt(data[0].answers[i].answer);
 							}
 						}
 					}
@@ -149,8 +149,8 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 		};
 
 		$scope.create = function() {
-			if ($scope.outletInfo.outlet_mm != undefined && $scope.outletInfo.outlet_en !=	undefined &&
-				$scope.answers.length != 0) {
+			if ($scope.outletInfo.outlet_mm !== undefined && $scope.outletInfo.outlet_en !== undefined &&
+				$scope.answers.length !== 0) {
 					$http.post('db_controller/surveys/create_survey.php', {
 						'area': $scope.outletInfo.area,
 						'city_mm': $scope.outletInfo.city_mm, 'city_en' : $scope.outletInfo.city_en,
@@ -162,9 +162,9 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 						'phone1' : $scope.outletInfo.phone1, 'phone2' : $scope.outletInfo.phone2, 'phone3' : $scope.outletInfo.phone3,
 						'survey_status': $scope.outletInfo.survey_status,
 						'longitude' : String($scope.outletInfo.longitude), 'latitude' : String($scope.outletInfo.latitude),
-						'image_path_1' : $scope.file1name != undefined ? 'img/outlet/' + $scope.file1name : '',
-						'image_path_2' : $scope.file2name != undefined ? 'img/outlet/' + $scope.file2name : '',
-						'image_path_3' : $scope.file3name != undefined ? 'img/outlet/' + $scope.file3name : '',
+						'image_path_1' : $scope.file1name !== undefined ? 'img/outlet/' + $scope.file1name : '',
+						'image_path_2' : $scope.file2name !== undefined ? 'img/outlet/' + $scope.file2name : '',
+						'image_path_3' : $scope.file3name !== undefined ? 'img/outlet/' + $scope.file3name : '',
 						'user_id' : $scope.outletInfo.user_id,
 						'answers' : $scope.answers
 					}).success(function(data, status, headers, config) {
@@ -183,7 +183,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 					fileUpload.uploadFileToUrl(file1, 'img');
 				}
 
-				if (file2 != undefined) {
+				if (file2 !== undefined) {
 					var $f2 = file2;
 					Upload.upload({
 						url : 'img/outlet/',
@@ -195,7 +195,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 
 				}
 
-				if (file3 != undefined) {
+				if (file3 !== undefined) {
 					var $f3 = file3;
 					Upload.upload({
 						url : 'img/outlet/',
@@ -218,8 +218,8 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 		};
 
 		$scope.update = function() {
-			if ($scope.outletInfo.outlet_mm != undefined && $scope.outletInfo.outlet_en != undefined &&
-				$scope.answers.length != 0) {
+			if ($scope.outletInfo.outlet_mm !== undefined && $scope.outletInfo.outlet_en !== undefined &&
+				$scope.answers.length !== 0) {
 					$http.post('db_controller/surveys/update_survey.php', {
 						'id': $scope.outletInfo.id,
 						'area': $scope.outletInfo.area,
@@ -232,9 +232,9 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 						'phone1' : $scope.outletInfo.phone1, 'phone2' : $scope.outletInfo.phone2, 'phone3' : $scope.outletInfo.phone3,
 						'survey_status': $scope.outletInfo.survey_status,
 						'longitude' : String($scope.outletInfo.longitude), 'latitude' : String($scope.outletInfo.latitude),
-						'image_path_1' : $scope.file1name != undefined ? 'img/outlet/' + $scope.file1name : '',
-						'image_path_2' : $scope.file2name != undefined ? 'img/outlet/' + $scope.file2name : '',
-						'image_path_3' : $scope.file3name != undefined ? 'img/outlet/' + $scope.file3name : '',
+						'image_path_1' : $scope.file1name !== undefined ? 'img/outlet/' + $scope.file1name : '',
+						'image_path_2' : $scope.file2name !== undefined ? 'img/outlet/' + $scope.file2name : '',
+						'image_path_3' : $scope.file3name !== undefined ? 'img/outlet/' + $scope.file3name : '',
 						'user_id' : $scope.outletInfo.user_id,
 						'answers' : $scope.answers
 					}).success(function(data, status, headers, config) {
@@ -268,7 +268,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 		};
 
 		$scope.AddToAnswer = function(item, list) {
-			if (item.answer != 0 && item.answer != undefined) {
+			if (item.answer !== 0 && item.answer !== undefined) {
 				for (var i = 0; i< list.length; i++) {
 					var qas = list[i];
 					if (qas.question_id == item.config_id) {
@@ -280,7 +280,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 					'answer' : item.answer
 				};
 				list.push(ans);
-			} else if (item.answer == 0 || item.answer == undefined) {
+			} else if (item.answer === 0 || item.answer === undefined) {
 				var idx = list.indexOf(item.config_id);
 				if (idx > -1) {
 					list.splice(idx, 1);
@@ -305,7 +305,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 	};
 
 	$scope.isChecked = function() {
-		if ($scope.items != undefined) {
+		if ($scope.items !== undefined) {
 			return ($scope.cbselected.length === $scope.items.length);
 		}
 	};
@@ -320,7 +320,7 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 			$scope.cbselected = [];
 		} else if ($scope.cbselected.length === 0 || $scope.cbselected.length > 0) {
 			for (var i = 0; i < $scope.items.length; i++) {
-				$scope.cbselected.push($scope.items[i]['id']);
+				$scope.cbselected.push($scope.items[i].id);
 			}
 		}
 		$scope.cbValue.cbselect_edit = $scope.cbselected.length > 0 ? true : false;
@@ -390,10 +390,10 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 		}
 	};
 
-	$scope.fileReaderSupported = window.FileReader != null;
+	$scope.fileReaderSupported = window.FileReader !== null;
 
 	$scope.photoChanged = function(files, file_name){
-		if (files != null) {
+		if (files !== null) {
 			// switch(file_name) {
 			// 	case "file1":
 			// 		file1 = files[0];
@@ -416,24 +416,24 @@ MyApp.controller('SurveyCtrl', ['$scope', '$mdDialog', '$http', 'Upload', 'fileU
 								case "file1":
 									$scope.outletInfo.image_path_1 = e.target.result;
 									file1 = e.target.result;
-									var filename = document.getElementById('file1').value.split('\\');
-									$scope.file1name = filename[filename.length-1];
+									var filename1 = document.getElementById('file1').value.split('\\');
+									$scope.file1name = filename1[filename.length-1];
 									break;
 								case "file2":
 									$scope.outletInfo.image_path_2 = e.target.result;
 									file2 = e.target.result;
-									var filename = document.getElementById('file2').value.split('\\');
-									$scope.file2name = filename[filename.length-1];
+									var filename2 = document.getElementById('file2').value.split('\\');
+									$scope.file2name = filename2[filename.length-1];
 									break;
 								case "file3":
 									$scope.outletInfo.image_path_3 = e.target.result;
 									file3 = e.target.result;
-									var filename = document.getElementById('file3').value.split('\\');
-									$scope.file3name = filename[filename.length-1];
+									var filename3 = document.getElementById('file3').value.split('\\');
+									$scope.file3name = filename3[filename.length-1];
 									break;
 							}
 						});
-					}
+					};
 				});
 			}
 
@@ -527,11 +527,11 @@ MyApp.directive("fileread", [
             scope.$apply(function() {
               scope.fileread = loadEvent.target.result;
             });
-          }
+		};
           reader.readAsDataURL(changeEvent.target.files[0]);
         });
       }
-    }
+  };
   }
 ]);
 
@@ -549,7 +549,7 @@ MyApp.service('fileUpload', ['$http', function ($http) {
 		}).error(function(response){
 			console.log(response);
 		});
-	}
+	};
 }]);
 
 //you need this function to convert the dataURI

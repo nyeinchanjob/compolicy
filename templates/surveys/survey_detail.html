@@ -1,4 +1,5 @@
-<md-content ng-cloak flex layout-fill ng-cloak="" class="dark-body-color md-padding" md-scroll-y ng-init="loadConfig()" md-scroll-y>
+<!DOCTYPE html>
+<md-content ng-cloak flex layout-fill class="dark-body-color md-padding" md-scroll-y ng-init="loadConfig()">
   	<form name="OutletDetail">
 		<md-card md-theme-watch flex>
       			<md-card-title>
@@ -12,7 +13,7 @@
 				<div flex layout-padding ng-show="show_layout=='survey_location'" ng-include="'templates/surveys/survey_location.html'" class="dark-body-color"></div>
     	</md-card-content>
 			<md-card-actions layout="row">
-				<md-button ng-click="previous(show_layout)" ng-show=show_previous>Previous</md-button>
+				<md-button ng-click="previous(show_layout)" ng-show="show_previous">Previous</md-button>
 				<span flex>&nbsp;</span>
 				<md-button ng-click="DetailClose()" >Cancel</md-button>
 				<md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() " ng-show="show_save">{{buttonAction}}</md-button>

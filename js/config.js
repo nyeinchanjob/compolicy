@@ -10,7 +10,7 @@ MyApp.controller('ConfigCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', func
 		config_value: undefined,
 		config_type: undefined,
 		config_status: true
-	}
+	};
 	$scope.org_value = '';
 	$scope.org_type = '';
 	$scope.cbselected = [];
@@ -71,51 +71,51 @@ MyApp.controller('ConfigCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', func
 			list.push(item);
 		}
 		$scope.cbValue.cbselect_edit = list.length > 0 ? true : false;
-	}
+	};
 
 	$scope.exists = function(item, list) {
 		if (list.length > 0) {
 			return list.indexOf(item) > -1;
 		}
-	}
+	};
 
 	$scope.isChecked = function() {
-		if ($scope.items != undefined) {
+		if ($scope.items !== undefined) {
 			return ($scope.cbselected.length === $scope.items.length);
 		}
-	}
+	};
 	$scope.isIndeterminate = function() {
 		return ($scope.cbselected.length !== 0 &&
 			$scope.cbselected.length !== $scope.items.length);
-	}
+	};
 	$scope.selectAll = function() {
 		if ($scope.cbselected.length === $scope.items.length) {
 			$scope.cbselected = [];
 		} else if ($scope.cbselected.length === 0 || $scope.cbselected.length > 0) {
 			for (var i = 0; i < $scope.items.length; i++) {
-				$scope.cbselected.push($scope.items[i]['id']);
+				$scope.cbselected.push($scope.items[i].id);
 			}
 		}
 		$scope.cbValue.cbselect_edit = $scope.cbselected.length > 0 ? true :
 			false;
-	}
+	};
 
 }]);
 
 MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast, id, action) {
 
-	if (id != undefined) {
+	if (id !== undefined) {
 		$http.post('db_controller/configs/read_one_config.php', {
 			'id': id
 		}).success(function(data, status, headers, config) {
 			$scope.configInfo = {
-				id : data[0]['id'],
-				config_value : data[0]['value'],
-				config_type : data[0]['type'],
-				config_status: data[0]['status'] == '1' ? true : false
+				id : data[0].id,
+				config_value : data[0].value,
+				config_type : data[0].type,
+				config_status: data[0].status == '1' ? true : false
 			};
-			$scope.org_value = data[0]['value'];
-			$scope.org_type = data[0]['type'];
+			$scope.org_value = data[0].value;
+			$scope.org_type = data[0].type;
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
 				$mdToast.simple()
@@ -124,7 +124,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 					.hideDelay(2000)
 				);
 		});
-	};
+	}
 
 	$scope.buttonAction = action == 'new' ? 'save' : 'update';
 
@@ -134,7 +134,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 			config_vale: undefined,
 			config_type: undefined,
 			config_status: true
-		}
+		};
 		$mdDialog.cancel();
 	};
 
@@ -143,7 +143,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 	};
 
 	$scope.create = function() {
-		if ($scope.configInfo.config_value != undefined) {
+		if ($scope.configInfo.config_value !== undefined) {
 			$scope.checkAndSave();
 		} else {
 			$mdToast.show(
@@ -160,7 +160,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 			'value': $scope.configInfo.config_value,
 			'type': $scope.configInfo.config_type
 		}).success(function(data, status, headers, config) {
-			if (Object.keys(data).length == 0) {
+			if (Object.keys(data).length === 0) {
 				$scope.save();
 			} else {
 				$mdToast.show(
@@ -191,7 +191,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 	};
 
 	$scope.update = function() {
-		if ($scope.configInfo.config_value != undefined) {
+		if ($scope.configInfo.config_value !== undefined) {
 			if ($scope.org_value != $scope.configInfo.config_value) {
 					$scope.checkAndUpdate();
 			} else {
@@ -212,7 +212,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 			'value': $scope.configInfo.config_value,
 			'type': $scope.configInfo.config_type,
 		}).success(function(data, status, headers, config) {
-			if (Object.keys(data).length == 0) {
+			if (Object.keys(data).length === 0) {
 				$scope.edit();
 			} else {
 				$mdToast.show(
@@ -223,7 +223,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 					);
 			}
 		});
-	}
+	};
 
 	$scope.edit = function() {
 		$http.post('db_controller/configs/update_config.php', {
@@ -241,7 +241,7 @@ MyApp.controller('ConfigDialogCtrl',function($scope, $http, $mdDialog, $mdToast,
 			$scope.getAll();
 			$mdDialog.cancel();
 		});
-	}
+	};
 
 	$scope.getAll = function() {
 		$http.get('db_controller/configs/read_config.php').success(function(

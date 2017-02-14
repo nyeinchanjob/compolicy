@@ -17,7 +17,7 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 		type_id : [],
 		other_type_detail : undefined,
 		product_status: true
-	}
+	};
 	$scope.other_size_radio = false;
 	$scope.checkedByInserted = false;
 	$scope.other_type_check = false;
@@ -79,34 +79,34 @@ MyApp.controller('ProductCtrl', ['$scope', '$mdDialog', '$http', function(
 			list.push(item);
 		}
 		$scope.cbValue.cbselect_edit = list.length > 0 ? true : false;
-	}
+	};
 
 	$scope.exists = function(item, list) {
 		if (list.length > 0) {
 			return list.indexOf(item) > -1;
 		}
-	}
+	};
 
 	$scope.isChecked = function() {
-		if ($scope.items != undefined) {
+		if ($scope.items !== undefined) {
 			return ($scope.cbselected.length === $scope.items.length);
 		}
-	}
+	};
 	$scope.isIndeterminate = function() {
 		return ($scope.cbselected.length !== 0 &&
 			$scope.cbselected.length !== $scope.items.length);
-	}
+	};
 	$scope.selectAll = function() {
 		if ($scope.cbselected.length === $scope.items.length) {
 			$scope.cbselected = [];
 		} else if ($scope.cbselected.length === 0 || $scope.cbselected.length > 0) {
 			for (var i = 0; i < $scope.items.length; i++) {
-				$scope.cbselected.push($scope.items[i]['product_id']);
+				$scope.cbselected.push($scope.items[i].product_id);
 			}
 		}
 		$scope.cbValue.cbselect_edit = $scope.cbselected.length > 0 ? true :
 			false;
-	}
+	};
 
 }]);
 
@@ -120,28 +120,28 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			$scope.brands = response.records[0].brands;
 			$scope.sizes = response.records[1].sizes;
 			$scope.types = response.records[2].types;
-			if (action == 'new') { $scope.productInfo.size_id = response.records[1].sizes[0]['config_id'];}
+			if (action == 'new') { $scope.productInfo.size_id = response.records[1].sizes[0].config_id;}
 
-		})
+		});
 	};
 
-	if (id != undefined) {
+	if (id !== undefined) {
 		$http.post('db_controller/surveys/read_one_survey.php', {
 			'id': id
 		}).success(function(data, status, headers, config) {
 			$scope.productInfo = {
-				product_id : data[0]['id'],
-				product_code : data[0]['code'],
-				product_name : data[0]['name'],
-				brand_id : data[0]['brandId'],
-				size_id : data[0]['sizeId'],
+				product_id : data[0].id,
+				product_code : data[0].code,
+				product_name : data[0].name,
+				brand_id : data[0].brandId,
+				size_id : data[0].sizeId,
 				type_id :[],
-				other_size_detail : data[0]['otherSizeDetail'],
-				other_type_detail : data[0]['otherTypeDetail'],
-				product_status: data[0]['status'] == '1' ? true : false
+				other_size_detail : data[0].otherSizeDetail,
+				other_type_detail : data[0].otherTypeDetail,
+				product_status: data[0].status === '1' ? true : false
 			};
-			if (data[0]['otherSizeDetail'].length>0) { $scope.other_size_radio = true; }
-			if (data[0]['otherTypeDetail'].length>0) { $scope.other_type_check = true; }
+			if (data[0].otherSizeDetail.length>0) { $scope.other_size_radio = true; }
+			if (data[0].otherTypeDetail.length>0) { $scope.other_type_check = true; }
 
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
@@ -155,7 +155,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 		$http.post('db_controller/survyes/read_type_survey.php', {
 			'id' : id
 		}).success(function(data, status, headers, config) {
-			$scope.productInfo.type_id = data[0]['typeId'];
+			$scope.productInfo.type_id = data[0].typeId;
 
 		}).error(function(data, status, headers, config) {
 			$mdToast.show(
@@ -173,8 +173,8 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.checkedByInserted = function(id) {
+		var checked = false;
 		if ($scope.productInfo.type_id.length>0) {
-			var checked = false;
 			for(var i = 0; i< $scope.productInfo.type_id.length; i++) {
 				if (id == $scope.productInfo.type_id[i]) {
 					checked = true;
@@ -182,7 +182,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			}
 		}
 		return checked;
-	}
+	};
 
 	$scope.buttonAction = action == 'new' ? 'save' : 'update';
 
@@ -197,7 +197,7 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 			type_id : [],
 			other_type_detail : undefined,
 			product_status: true
-		}
+		};
 		$mdDialog.cancel();
 	};
 
@@ -219,9 +219,8 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 
 	$scope.create = function() {
 		console.log($scope.productInfo.other_type_checked);
-		if ($scope.productInfo.product_code != undefined && $scope.productInfo.product_name !=
-			undefined &&
-			$scope.productInfo.product_status != undefined) {
+		if ($scope.productInfo.product_code !== undefined && $scope.productInfo.product_name !== undefined &&
+			$scope.productInfo.product_status !== undefined) {
 			$http.post('db_controller/surveys/create_survey.php', {
 				'code': $scope.productInfo.product_code,
 				'name': $scope.productInfo.product_name,
@@ -256,9 +255,9 @@ function DialogController($scope, $http, $mdDialog, id, action) {
 	};
 
 	$scope.update = function() {
-		if ($scope.productInfo.product_code != undefined && $scope.productInfo.product_name !=
+		if ($scope.productInfo.product_code !== undefined && $scope.productInfo.product_name !==
 			undefined &&
-			$scope.productInfo.product_status != undefined) {
+			$scope.productInfo.product_status !== undefined) {
 			$http.post('db_controller/surveys/update_survey.php', {
 				'id': id,
 				'code': $scope.productInfo.product_code,

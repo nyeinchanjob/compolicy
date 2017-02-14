@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <md-dialog ng-cloak>
     <form name="userDetail">
         <md-toolbar class="md-warn">
@@ -63,7 +64,7 @@
                 <div ng-show="divcheckpassword" layout="column" layout-fill flex>
                     <md-input-container class="md-block" flex>
                         <label>{{userInfo.username == undefined ? 'User' : userInfo.username}}'s Password</label>
-                        <input required ng-model="org_confirm_password" name="org_confirm_password" type=password>
+                        <input required ng-model="org_confirm_password" name="org_confirm_password" type="password">
                         <div class="hint">Type current user's Password to change</div>
                     </md-input-container>
                     <div layout="row" layout-align="end center">
@@ -79,6 +80,6 @@
         <md-dialog-actions layout="row" layout-align="end center">
             <md-button ng-click="cancel();">Cancel</md-button>
             <md-button class="md-primary" ng-click="buttonAction == 'save' ? create() : update() ">{{buttonAction}}</md-button>
-        </md-dilaog-actions>
+        </md-dialog-actions>
     </form>
 </md-dialog>
